@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.xlsx
+
+*.log
+
+/venv
+/reports
+
+foo.txt
