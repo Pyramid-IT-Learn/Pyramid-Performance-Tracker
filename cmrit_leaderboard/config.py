@@ -31,7 +31,7 @@ LEADERBOARD_REPORT_FILE = 'reports/CurrentCMRITLeaderboard2026.xlsx'
 EXCEL_FILE_PATH = 'data/CMRIT2026Leaderbaord.xlsx'
 CSV_FILE_PATH = 'data/CMRIT2026Leaderbaord.csv'
 
-GEKSFORGEEKS_FILE = 'reports/geeksforgeeks_handles.txt'
+GEEKSFORGEEKS_FILE = 'reports/geeksforgeeks_handles.txt'
 CODEFORCES_FILE = 'reports/codeforces_handles.txt'
 LEETCODE_FILE = 'reports/leetcode_handles.txt'
 CODECHEF_FILE = 'reports/codechef_handles.txt'

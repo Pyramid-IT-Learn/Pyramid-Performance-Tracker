@@ -1,5 +1,3 @@
-# cmrit_leaderboard/main.py
-
 import os
 import argparse
 import shutil
@@ -20,9 +18,10 @@ from verifiers.leetcode import process_leetcode
 from verifiers.utils import sheet_download_if_not_exists
 from verifiers.participant import load_participants
 
-from cmrit_leaderboard.config import DESCRIPTION, USERNAME_SHEET_URL, CSV_FILE_PATH
+from cmrit_leaderboard.config import DESCRIPTION, USERNAME_SHEET_URL, CSV_FILE_PATH, CODECHEF_FILE, CODEFORCES_FILE, GEEKSFORGEEKS_FILE, HACKERRANK_FILE, LEETCODE_FILE
 from cmrit_leaderboard.scraper import scrape_all, scrape_platform
 from cmrit_leaderboard.leaderboard import Leaderboard
+from cmrit_leaderboard.db_uploader import upload_to_db
 
 def main():
     parser = argparse.ArgumentParser(description=DESCRIPTION)
@@ -30,10 +29,11 @@ def main():
     parser.add_argument('--build', action='store_true', help='Build the leaderboard')
     parser.add_argument('--verify', choices=['all', 'codechef', 'codeforces', 'geeksforgeeks', 'hackerrank', 'leetcode'], help='Platform to verify')
     parser.add_argument('--clear', action='store_true', help='Clear the logs and reports directories')
+    parser.add_argument('--upload', action='store_true', help='Upload data from CSV to database')
 
     args = parser.parse_args()
 
-    if not any([args.scrape, args.build, args.verify]):
+    if not any([args.scrape, args.build, args.verify, args.upload]):
         parser.print_help()
     else:
         if args.scrape:
@@ -69,6 +69,22 @@ def main():
             if args.verify == 'leetcode' or args.verify == 'all':
                 process_leetcode(participants)
 
+        if args.upload:
+            # Make sure reports directory exists and has all the required files
+            if os.path.exists('reports'):
+                required_files = [CODECHEF_FILE, CODEFORCES_FILE, GEEKSFORGEEKS_FILE, HACKERRANK_FILE, LEETCODE_FILE]
+                for file in required_files:
+                    if not os.path.exists(f'{file}'):
+                        print(f"File '{file}' is missing. Please run the verifier script again.")
+                        exit()
+            else:
+                print("Directory 'reports' does not exist. Please run the verifier script again.")
+                exit()
+
+            print("Uploading data to database...")
+            # Call the function from db_uploader to process CSV and update the database
+            upload_to_db()
+
         if args.clear:
             for folder in ['logs', 'reports']:
                 for filename in os.listdir(folder):
@@ -83,5 +99,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

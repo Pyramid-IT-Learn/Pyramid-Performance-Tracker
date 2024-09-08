@@ -2,7 +2,7 @@
 
 import logging
 import requests
-from cmrit_leaderboard.config import GEKSFORGEEKS_FILE, GEEKSFORGEEKS_LOG_FILE, DEBUG
+from cmrit_leaderboard.config import GEEKSFORGEEKS_FILE, GEEKSFORGEEKS_LOG_FILE, DEBUG
 from .utils import setup_logger
 
 geeks_for_geeks_logger = setup_logger('geeks_for_geeks_logger', GEEKSFORGEEKS_LOG_FILE, DEBUG)
@@ -58,7 +58,7 @@ def process_geeksforgeeks(participants):
                 geeks_for_geeks_logger.debug(f"GeeksForGeeks URL retry: {geeksforgeeks_url_exists}, Response URL: {response_url}")
 
         # Write participant data to file
-        with open(GEKSFORGEEKS_FILE, 'a') as file:
+        with open(GEEKSFORGEEKS_FILE, 'a') as file:
             file.write(f"{participant.handle}, {participant.geeksforgeeks_handle}, {geeksforgeeks_url_exists}\n")
         geeks_for_geeks_logger.debug(
             f"Data written to file for participant {participant.handle}: {participant.geeksforgeeks_handle},"

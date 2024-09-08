@@ -8,6 +8,9 @@ class Database:
         self.client = MongoClient(MONGODB_URI)
         self.db = self.client[DB_NAME]
         self.users_collection = self.db[USERS_COLLECTION]
+        self.users_collection.create_index(
+            [('hallTicketNo', 1)], unique=True
+        )
 
     def upsert_user(self, hall_ticket_no, data):
         self.users_collection.update_one(
@@ -20,6 +23,6 @@ class Database:
         return self.users_collection.find({
             f'{platform}Username': {'$exists': True, '$ne': None}
         })
-    
+
     def get_all_users(self):
         return self.users_collection.find({})
