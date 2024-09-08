@@ -20,6 +20,7 @@ CODEFORCES_URL = 'https://codeforces.com/api'
 GEEKSFORGEEKS_URL = 'https://auth.geeksforgeeks.org/user'
 HACKERRANK_URL = 'https://www.hackerrank.com/'
 LEETCODE_URL = 'https://leetcode.com/'
+CODECHEF_API_URL = 'https://code-chef-rating-api.vercel.app/'
 
 # File paths
 HACKERRANK_URLS_FILE = 'data/hackerrank_urls.txt'

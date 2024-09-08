@@ -1,32 +1,65 @@
 # verifiers/codechef.py
 
+import json
 import logging
 import requests
-from cmrit_leaderboard.config import CODECHEF_FILE, DEBUG
-from time import sleep
+import time
+from cmrit_leaderboard.config import CODECHEF_FILE, CODECHEF_LOG_FILE, CODECHEF_API_URL, DEBUG
 
-def check_url_exists(url):
+# Rate limiter configuration
+MAX_CALLS_PER_MINUTE = 10
+SECONDS_PER_MINUTE = 60
+CALL_INTERVAL = SECONDS_PER_MINUTE / MAX_CALLS_PER_MINUTE
+
+def check_codechef_url(url):
     try:
         response = requests.get(url)
-        return response.status_code == 200, response.url
-    except requests.RequestException as e:
-        logging.error(f"Error checking URL {url}: {e}")
-        return False, None
+        response_json = response.json()
+        # if success is true in the response json
+        if response_json.get("success"):
+            return True, response.url
+        return False, response.url
+    except json.decoder.JSONDecodeError:
+        print("Error decoding JSON response")
+        print(response.text)
+        exit(0)
 
 def process_codechef(participants):
-    logging.basicConfig(filename='codechef_debug.log', level=logging.DEBUG)
-    for participant in participants:
-        if participant.codechef_handle and participant.codechef_handle != '#N/A':
-            url_exists, response_url = check_url_exists(
-                f"https://code-chef-rating-api.vercel.app/{participant.codechef_handle}"
-            )
-            sleep(8)
-            if not url_exists:
-                logging.debug(f"Retrying CodeChef URL check for participant {participant.handle}")
-                url_exists, response_url = check_url_exists(
-                    f"https://code-chef-rating-api.vercel.app/{participant.codechef_handle}"
-                )
-            with open(CODECHEF_FILE, 'a') as file:
-                file.write(f"{participant.handle}, {participant.codechef_handle}, {url_exists}\n")
-            logging.debug(f"Data written to file for participant {participant.handle}")
+    logging.basicConfig(filename=CODECHEF_LOG_FILE, level=logging.DEBUG)
+
+    last_request_time = time.time()
+    total = len(participants)
+    for index, participant in enumerate(participants, start=1):
+        # Check CodeChef URL for each participant
+        logging.debug(f"Checking CodeChef URL for participant ({index}/{total}) {participant.handle} with handle {participant.codechef_handle}")
+        print(f"Checking CodeChef URL for participant ({index}/{total}) {participant.handle} with handle {participant.codechef_handle}")
+
+        if "@" not in participant.codechef_handle and participant.codechef_handle != '':
+            if participant.codechef_handle != '#n/a':
+                current_time = time.time()
+                time_since_last_request = current_time - last_request_time
+                if time_since_last_request < CALL_INTERVAL:
+                    wait_time = CALL_INTERVAL - time_since_last_request
+                    print(f"Rate limit in effect. Waiting for {wait_time:.2f} seconds.")
+                    logging.debug(f"Rate limit in effect. Waiting for {wait_time:.2f} seconds.")
+                    time.sleep(wait_time)
+                
+                # Update the last request time
+                last_request_time = time.time()
+
+                # Check if CodeChef URL exists
+                codechef_url_exists, response_url = check_codechef_url(
+                    CODECHEF_API_URL + participant.codechef_handle)
+                logging.debug(f"CodeChef URL exists: {codechef_url_exists}, Response URL: {response_url}")
+
+                # Write participant data to file
+                with open(CODECHEF_FILE, 'a') as file:
+                    file.write(f"{participant.handle}, {participant.codechef_handle}, {codechef_url_exists}\n")
+                logging.debug(f"Data written to file for participant {participant.handle}: {participant.codechef_handle},"
+                            f" {codechef_url_exists}")
+
+        # Print progress and debug information
+        print(f"Processed participant {index}/{len(participants)}: {participant.handle}")
+        logging.debug(f"Processed participant {index}/{len(participants)}: {participant.handle}")
+
     logging.shutdown()
