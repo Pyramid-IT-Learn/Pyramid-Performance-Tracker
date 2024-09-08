@@ -26,6 +26,12 @@ class Participant:
         hackerrank_handle = hackerrank_handle.replace('@', '')
         leetcode_handle = leetcode_handle.replace('@', '')
         geeksforgeeks_handle = geeksforgeeks_handle.strip()
+        # Remove . from all the handles
+        geeksforgeeks_handle = geeksforgeeks_handle.replace('.', '')
+        codeforces_handle = codeforces_handle.replace('.', '')
+        leetcode_handle = leetcode_handle.replace('.', '')
+        codechef_handle = codechef_handle.replace('.', '')
+        hackerrank_handle = hackerrank_handle.replace('.', '')
         self.handle = handle
         self.geeksforgeeks_handle = geeksforgeeks_handle
         self.codeforces_handle = codeforces_handle
@@ -47,7 +53,7 @@ def load_participants(file_path):
     participants = []
     with open(file_path, 'r') as temp_file:
         temp_reader = csv.reader(temp_file)  # Create a temporary reader to count total rows
-        total_rows = sum(1 for _ in temp_reader) - 2  # Calculate total rows in the CSV
+        total_rows = sum(1 for _ in temp_reader) - 1  # Calculate total rows in the CSV
         # close the temporary file
         temp_file.close()
     with open(file_path, 'r') as file:
@@ -60,6 +66,13 @@ def load_participants(file_path):
             if all(x == 'None' or x == '' for x in row):  # Stop if all cells in the row are empty
                 break
             handle, geeksforgeeks_handle, codeforces_handle, leetcode_handle, codechef_handle, hackerrank_handle = row
+            # convert all the handles to lowercase
+            handle = handle.lower()
+            geeksforgeeks_handle = geeksforgeeks_handle.lower()
+            codeforces_handle = codeforces_handle.lower()
+            leetcode_handle = leetcode_handle.lower()
+            codechef_handle = codechef_handle.lower()
+            hackerrank_handle = hackerrank_handle.lower()
             print(f"( {count} / {total_rows} ) Loading participant {handle}")  # Print progress
             participant = Participant(handle, geeksforgeeks_handle, codeforces_handle, leetcode_handle, codechef_handle,
                                     hackerrank_handle)  # Create Participant object

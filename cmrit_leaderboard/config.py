@@ -27,11 +27,18 @@ PARTICIPANT_DETAILS_FILE = 'data/participant_details.csv'
 LEADERBOARD_REPORT_FILE = 'reports/CurrentCMRITLeaderboard2026.xlsx'
 EXCEL_FILE_PATH = 'data/CMRIT2026Leaderbaord.xlsx'
 CSV_FILE_PATH = 'data/CMRIT2026Leaderbaord.csv'
+
 GEKSFORGEEKS_FILE = 'reports/geeksforgeeks_handles.txt'
 CODEFORCES_FILE = 'reports/codeforces_handles.txt'
 LEETCODE_FILE = 'reports/leetcode_handles.txt'
 CODECHEF_FILE = 'reports/codechef_handles.txt'
 HACKERRANK_FILE = 'reports/hackerrank_handles.txt'
+
+GEEKSFORGEEKS_LOG_FILE = 'logs/geeksforgeeks.log'
+CODEFORCES_LOG_FILE = 'logs/codeforces.log'
+LEETCODE_LOG_FILE = 'logs/leetcode.log'
+CODECHEF_LOG_FILE = 'logs/codechef.log'
+HACKERRANK_LOG_FILE = 'logs/hackerrank.log'
 
 # Leetcode Query
 LEETCODE_QUERY = '''

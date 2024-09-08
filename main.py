@@ -1,7 +1,8 @@
 # cmrit_leaderboard/main.py
 
-import csv
+import os
 import argparse
+import shutil
 
 from verifiers.codechef import process_codechef
 from verifiers.codeforces import process_codeforces
@@ -16,12 +17,33 @@ from cmrit_leaderboard.scraper import scrape_all, scrape_platform
 from cmrit_leaderboard.leaderboard import Leaderboard
 
 def main():
+    # Create logs directory if it doesn't exist
+    if not os.path.exists('logs'):
+        os.makedirs('logs')
+
+    # Create reports directory if it doesn't exist
+    if not os.path.exists('reports'):
+        os.makedirs('reports')
+
     parser = argparse.ArgumentParser(description=DESCRIPTION)
     parser.add_argument('--scrape', choices=['all', 'codechef', 'codeforces', 'geeksforgeeks', 'hackerrank', 'leetcode'], help='Platform to scrape')
     parser.add_argument('--build', action='store_true', help='Build the leaderboard')
     parser.add_argument('--verify', choices=['all', 'codechef', 'codeforces', 'geeksforgeeks', 'hackerrank', 'leetcode'], help='Platform to verify')
+    parser.add_argument('--clear', action='store_true', help='Clear the logs and reports directories')
 
     args = parser.parse_args()
+
+    if args.clear:
+        for folder in ['logs', 'reports']:
+            for filename in os.listdir(folder):
+                file_path = os.path.join(folder, filename)
+                try:
+                    if os.path.isfile(file_path) or os.path.islink(file_path):
+                        os.unlink(file_path)
+                    elif os.path.isdir(file_path):
+                        shutil.rmtree(file_path)
+                except Exception as e:
+                    print('Failed to delete %s. Reason: %s' % (file_path, e))
 
     if not any([args.scrape, args.build, args.verify]):
         parser.print_help()
@@ -61,4 +83,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

@@ -8,5 +8,6 @@ __pycache__/
 
 /venv
 /reports
+/logs
 
 foo.txt
