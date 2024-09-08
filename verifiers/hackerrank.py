@@ -5,6 +5,9 @@ import requests
 from bs4 import BeautifulSoup
 from cmrit_leaderboard.config import HACKERRANK_FILE, HACKERRANK_LOG_FILE, DEBUG
 from time import sleep
+from .utils import setup_logger
+
+hackerrank_logger = setup_logger("hackerrank_logger", HACKERRANK_LOG_FILE, DEBUG)
 
 def check_url_exists(url):
     header = {
@@ -22,27 +25,27 @@ def check_url_exists(url):
 
         # try to find community-content class within the soup, if found then the handle exists
         if soup.find("div", {"class": "community-content"}):
-            print(f"Handle {url} exists, found the class community-content")
+            hackerrank_logger.debug(f"Handle {url} exists, found the class community-content")
             return True, response.url
 
         # Extract the title of the page
         title = soup.title.string
         
         if "class=\"error-title\"" in str(soup):
-            print(f"Handle {url} does not exist, found the class error-title")
+            hackerrank_logger.debug(f"Handle {url} does not exist, found the class error-title")
             return False, response.url
 
         elif "HTTP 404: Page Not Found | HackerRank" in title:
-            print(f"Handle {url} does not exist, found the title HTTP 404: Page Not Found | HackerRank")
+            hackerrank_logger.debug(f"Handle {url} does not exist, found the title HTTP 404: Page Not Found | HackerRank")
             return False, response.url
 
         elif "class=\"e404-view\"" in str(soup):
-            print(f"Handle {url} does not exist, found the class e404-view")
+            hackerrank_logger.debug(f"Handle {url} does not exist, found the class e404-view")
             return False, response.url
 
         # if the page contains the class class="page-not-found-container container" in the html, then the handle does not exist
         elif "class=\"page-not-found-container container\"" in str(soup):
-            print(f"Handle {url} does not exist, found the class page-not-found-container")
+            hackerrank_logger.debug(f"Handle {url} does not exist, found the class page-not-found-container")
             return False, response.url
         
         return True, response.url
@@ -50,7 +53,6 @@ def check_url_exists(url):
         return False, "Exception"
 
 def process_hackerrank(participants):
-    logging.basicConfig(filename=HACKERRANK_LOG_FILE, level=logging.DEBUG)
     for participant in participants:
         print(f"Processing HackerRank handle {participant.hackerrank_handle} for participant {participant.handle}: ")
         url_exists = False
@@ -59,12 +61,11 @@ def process_hackerrank(participants):
                 f"https://www.hackerrank.com/profile/{participant.hackerrank_handle}"
             )
             if not url_exists:
-                logging.debug(f"Retrying HackerRank URL check for participant {participant.handle}")
+                hackerrank_logger.debug(f"Retrying HackerRank URL check for participant {participant.handle}")
                 url_exists, response_url = check_url_exists(
                     f"https://www.hackerrank.com/profile/{participant.hackerrank_handle}"
                 )
-            print("")
+            print(f"Respoded with a URL: {response_url}, URL exists: {url_exists}")
         with open(HACKERRANK_FILE, 'a') as file:
             file.write(f"{participant.handle}, {participant.hackerrank_handle}, {url_exists}\n")
-        logging.debug(f"Data written to file for participant {participant.handle}")
-    logging.shutdown()
+        hackerrank_logger.debug(f"Data written to file for participant {participant.handle}")

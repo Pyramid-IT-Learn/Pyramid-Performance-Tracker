@@ -7,7 +7,8 @@ import urllib.parse
 import undetected_chromedriver as uc
 from ratelimiter import RateLimiter
 from selenium.webdriver.common.by import By
-from cmrit_leaderboard.config import LEETCODE_QUERY, MAX_REQUESTS_PER_SECOND, CHROME_DRIVER_VERSION, LEETCODE_FILE, DEBUG
+from cmrit_leaderboard.config import LEETCODE_QUERY, MAX_REQUESTS_PER_SECOND, CHROME_DRIVER_VERSION, LEETCODE_FILE, GIT_USERNAME, GIT_PASSWORD, DEBUG
+from .utils import setup_logger
 
 def process_leetcode(participants):
     """
@@ -53,9 +54,9 @@ def process_leetcode(participants):
     password = driver.find_element(By.NAME, "password")
     signin_btn = driver.find_element(By.NAME, "commit")
     # load username from USERNAME env variable
-    username = os.environ.get('USERNAME')
+    username = GIT_USERNAME
     # load password from PASSWORD env variable
-    passwd = os.environ.get('PASSWD')
+    passwd = GIT_PASSWORD
     login.send_keys(username)
     password.send_keys(passwd)
     signin_btn.click()

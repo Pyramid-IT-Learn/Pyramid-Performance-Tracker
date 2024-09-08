@@ -3,6 +3,8 @@ import os
 # API and Database configuration
 API_KEY = os.getenv('CODEFORCES_KEY')
 API_SECRET = os.getenv('CODEFORCES_SECRET')
+GIT_USERNAME = os.getenv('GIT_USERNAME')
+GIT_PASSWORD = os.getenv('GIT_PASSWORD')
 MONGODB_URI = 'mongodb://localhost:27017/'
 DB_NAME = 'CMRIT_2026_LEADERBOARD'
 USERS_COLLECTION = 'USERS'

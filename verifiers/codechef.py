@@ -5,11 +5,14 @@ import logging
 import requests
 import time
 from cmrit_leaderboard.config import CODECHEF_FILE, CODECHEF_LOG_FILE, CODECHEF_API_URL, DEBUG
+from .utils import setup_logger
 
 # Rate limiter configuration
 MAX_CALLS_PER_MINUTE = 10
 SECONDS_PER_MINUTE = 60
 CALL_INTERVAL = SECONDS_PER_MINUTE / MAX_CALLS_PER_MINUTE
+
+codechef_logger = setup_logger("codechef_logger", CODECHEF_LOG_FILE, logging.DEBUG)
 
 def check_codechef_url(url):
     try:
@@ -20,18 +23,16 @@ def check_codechef_url(url):
             return True, response.url
         return False, response.url
     except json.decoder.JSONDecodeError:
-        print("Error decoding JSON response")
-        print(response.text)
+        codechef_logger.error("Error decoding JSON response")
+        codechef_logger.error(response.text)
         exit(0)
 
 def process_codechef(participants):
-    logging.basicConfig(filename=CODECHEF_LOG_FILE, level=logging.DEBUG)
-
     last_request_time = time.time()
     total = len(participants)
     for index, participant in enumerate(participants, start=1):
         # Check CodeChef URL for each participant
-        logging.debug(f"Checking CodeChef URL for participant ({index}/{total}) {participant.handle} with handle {participant.codechef_handle}")
+        codechef_logger.debug(f"Checking CodeChef URL for participant ({index}/{total}) {participant.handle} with handle {participant.codechef_handle}")
         print(f"Checking CodeChef URL for participant ({index}/{total}) {participant.handle} with handle {participant.codechef_handle}")
 
         if "@" not in participant.codechef_handle and participant.codechef_handle != '':
@@ -41,7 +42,7 @@ def process_codechef(participants):
                 if time_since_last_request < CALL_INTERVAL:
                     wait_time = CALL_INTERVAL - time_since_last_request
                     print(f"Rate limit in effect. Waiting for {wait_time:.2f} seconds.")
-                    logging.debug(f"Rate limit in effect. Waiting for {wait_time:.2f} seconds.")
+                    codechef_logger.debug(f"Rate limit in effect. Waiting for {wait_time:.2f} seconds.")
                     time.sleep(wait_time)
                 
                 # Update the last request time
@@ -50,16 +51,16 @@ def process_codechef(participants):
                 # Check if CodeChef URL exists
                 codechef_url_exists, response_url = check_codechef_url(
                     CODECHEF_API_URL + participant.codechef_handle)
-                logging.debug(f"CodeChef URL exists: {codechef_url_exists}, Response URL: {response_url}")
+                codechef_logger.debug(f"CodeChef URL exists: {codechef_url_exists}, Response URL: {response_url}")
 
                 # Write participant data to file
                 with open(CODECHEF_FILE, 'a') as file:
                     file.write(f"{participant.handle}, {participant.codechef_handle}, {codechef_url_exists}\n")
-                logging.debug(f"Data written to file for participant {participant.handle}: {participant.codechef_handle},"
+                codechef_logger.debug(f"Data written to file for participant {participant.handle}: {participant.codechef_handle},"
                             f" {codechef_url_exists}")
 
         # Print progress and debug information
         print(f"Processed participant {index}/{len(participants)}: {participant.handle}")
-        logging.debug(f"Processed participant {index}/{len(participants)}: {participant.handle}")
+        codechef_logger.debug(f"Processed participant {index}/{len(participants)}: {participant.handle}")
 
-    logging.shutdown()
+    codechef_logger.debug("CodeChef processing complete")
