@@ -11,5 +11,6 @@ __pycache__/
 /logs
 
 geckodriver.exe
+load-env-as-secrets.ps1
 
 foo.txt
