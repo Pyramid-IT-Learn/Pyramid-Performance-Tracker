@@ -1,0 +1,187 @@
+name: Scrape & Build Leaderboard
+
+on:
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'Select the job to run'
+        required: false
+        default: 'all'  # Default to 'build' if no input is provided
+        type: choice
+        options:
+          - all
+          - codechef
+          - codeforces
+          - geeksforgeeks
+          - hackerrank
+          - leetcode
+  schedule:
+    - cron: '00 20 * * 1,5'
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+  GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+  GFG_USERNAME: ${{ secrets.GFG_USERNAME }}
+  GFG_PASSWORD: ${{ secrets.GFG_PASSWORD }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  CODEFORCES_KEY: ${{ secrets.CODEFORCES_KEY }}
+  CODEFORCES_SECRET: ${{ secrets.CODEFORCES_SECRET }}
+
+jobs:
+
+  codechef:
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codechef' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+      
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Scrape Codechef
+        run: |
+          python main.py --scrape codechef
+
+  codeforces:
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codeforces' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+      
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Scrape Codeforces
+        run: |
+          python main.py --scrape codeforces
+
+  geeksforgeeks:
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'geeksforgeeks' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+      
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Gecko Driver
+        run: |
+          chmod +x ./scripts/gecko.sh
+          ./scripts/gecko.sh
+      
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Scrape GeeksforGeeks
+        run: |
+          python main.py --scrape geeksforgeeks
+
+  hackerrank:
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'hackerrank' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+      
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Scrape HackerRank
+        run: |
+          python main.py --scrape hackerrank
+
+  leetcode:
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'leetcode' }}
+    runs-on: windows-latest
+    steps:
+      - uses: browser-actions/setup-chrome@v1
+      - run: chrome --version
+
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+      
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Scrape LeetCode
+        run: |
+          python main.py --scrape leetcode
+
+  build:
+    needs: [codechef, codeforces, geeksforgeeks, hackerrank, leetcode]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+      
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Build Leaderboard
+        run: |
+          python main.py --build
+      
+      - name: Archive Leaderboard
+        uses: actions/upload-artifact@v4
+        with:
+          name: leaderboard
+          path: reports/*.csv
+          compression-level: 9
+          retention-days: 5
+          
