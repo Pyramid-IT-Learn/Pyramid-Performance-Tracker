@@ -184,4 +184,17 @@ jobs:
           path: reports/*.csv
           compression-level: 9
           retention-days: 5
-          
+      
+      - name: Get leaderboard report file path
+        id: get_file_path
+        run: |
+          LEADERBOARD_REPORT_FILE=$(python -c "from cmrit_leaderboard.config import LEADERBOARD_REPORT_FILE; print(LEADERBOARD_REPORT_FILE)")
+          echo "LEADERBOARD_REPORT_FILE=${LEADERBOARD_REPORT_FILE}" >> $GITHUB_ENV
+
+      - name: Archive Leaderboard
+        uses: actions/upload-artifact@v4
+        with:
+          name: leaderboard
+          path: ${{ env.LEADERBOARD_REPORT_FILE }}
+          compression-level: 9
+          retention-days: 5

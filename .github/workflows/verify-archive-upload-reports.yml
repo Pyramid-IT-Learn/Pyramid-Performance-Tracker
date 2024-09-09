@@ -33,7 +33,7 @@ env:
 
 jobs:
   codechef:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codechef' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codechef' || github.event == 'schedule' || github.event == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -64,7 +64,7 @@ jobs:
           retention-days: 5
 
   codeforces:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codeforces' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codeforces' || github.event == 'schedule' || github.event == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -95,7 +95,7 @@ jobs:
           retention-days: 5
 
   geeksforgeeks:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'geeksforgeeks' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'geeksforgeeks' || github.event == 'schedule' || github.event == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -126,7 +126,7 @@ jobs:
           retention-days: 5
 
   hackerrank:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'hackerrank' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'hackerrank' || github.event == 'schedule' || github.event == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -157,7 +157,7 @@ jobs:
           retention-days: 5
 
   leetcode:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'leetcode' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'leetcode' || github.event == 'schedule' || github.event == 'push' }}
     runs-on: windows-latest
     steps:
       - uses: browser-actions/setup-chrome@v1
@@ -248,7 +248,5 @@ jobs:
           pip install -r requirements.txt
 
       - name: Upload Reports to Database
-        env:
-          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}  # Add your DB connection string secret here
         run: |
           python main.py --upload
