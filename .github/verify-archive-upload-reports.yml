@@ -1,0 +1,216 @@
+
+name: Verify & Upload Users
+
+on:
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'Choose which job to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - codechef
+          - codeforces
+          - geeksforgeeks
+          - hackerrank
+          - leetcode
+  schedule:
+    - cron: '58 18 * * 1,5'
+
+env:
+  GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+  GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+  GFG_USERNAME: ${{ secrets.GFG_USERNAME }}
+  GFG_PASSWORD: ${{ secrets.GFG_PASSWORD }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  API_KEY: ${{ secrets.CODECHEF_API_KEY }}
+  API_SECRET: ${{ secrets.CODECHEF_API_SECRET }}
+
+jobs:
+  codechef:
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codechef' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+      
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r usernameVerifier/requirements.txt
+
+      - name: Verify Users Codechef
+        run: |
+          python main.py --verify codechef
+
+      - name: Archive Codechef Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: codechef-report
+          path: reports/codechef_handles.txt
+          compression-level: 9
+          retention-days: 5
+
+  codeforces:
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codeforces' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+      
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r usernameVerifier/requirements.txt
+
+      - name: Verify Users Codeforces
+        run: |
+          python main.py --verify codeforces
+
+      - name: Archive Codeforces Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeforces-report
+          path: reports/codeforces_handles.txt
+          compression-level: 9
+          retention-days: 5
+
+  geeksforgeeks:
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'geeksforgeeks' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+      
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r usernameVerifier/requirements.txt
+
+      - name: Verify Users GeeksforGeeks
+        run: |
+          python main.py --verify geeksforgeeks
+
+      - name: Archive GeeksforGeeks Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: geeksforgeeks-report
+          path: reports/geeksforgeeks_handles.txt
+          compression-level: 9
+          retention-days: 5
+
+  hackerrank:
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'hackerrank' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+      
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r usernameVerifier/requirements.txt
+
+      - name: Verify Users HackerRank
+        run: |
+          python main.py --verify hackerrank
+
+      - name: Archive HackerRank Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: hackerrank-report
+          path: reports/hackerrank_handles.txt
+          compression-level: 9
+          retention-days: 5
+
+  leetcode:
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'leetcode' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+      
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r usernameVerifier/requirements.txt
+
+      - name: Verify Users LeetCode
+        run: |
+          python main.py --verify leetcode
+
+      - name: Archive LeetCode Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: leetcode-report
+          path: reports/leetcode_handles.txt
+          compression-level: 9
+          retention-days: 5
+
+  upload-to-db:
+    needs: [codechef, codeforces, geeksforgeeks, hackerrank, leetcode]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Download multiple artifacts
+        uses: marcofaggian/action-download-multiple-artifacts@v1
+        with:
+          names: codechef-report codeforces-report geeksforgeeks-report hackerrank-report leetcode-report
+          paths: reports/codechef_handles.txt reports/codeforces_handles.txt reports/geeksforgeeks_handles.txt reports/hackerrank_handles.txt reports/leetcode_handles.txt
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r usernameVerifier/requirements.txt
+
+      - name: Upload Reports to Database
+        env:
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}  # Add your DB connection string secret here
+        run: |
+          python main.py --upload
