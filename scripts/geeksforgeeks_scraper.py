@@ -62,9 +62,7 @@ def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
     # Initialize Firefox driver
     options = Options()
     options.add_argument("-headless")
-    options.binary_location = "/usr/bin/firefox"
-    service = Service(executable_path="./geckodriver")
-    driver = webdriver.Firefox(service=service, options=options)
+    driver = webdriver.Firefox(options=options)
     
     # Log in to GeeksforGeeks
     driver.get("https://auth.geeksforgeeks.org/")
