@@ -3,7 +3,7 @@
 import logging
 import requests
 from bs4 import BeautifulSoup
-from cmrit_leaderboard.config import HACKERRANK_FILE, HACKERRANK_LOG_FILE, DEBUG
+from cmrit_leaderboard.config import HACKERRANK_URL, HACKERRANK_FILE, HACKERRANK_LOG_FILE, DEBUG
 from time import sleep
 from .utils import setup_logger
 
@@ -58,12 +58,12 @@ def process_hackerrank(participants):
         url_exists = False
         if participant.hackerrank_handle and participant.hackerrank_handle != '#n/a':
             url_exists, response_url = check_url_exists(
-                f"https://www.hackerrank.com/profile/{participant.hackerrank_handle}"
+                f"{HACKERRANK_URL}profile/{participant.hackerrank_handle}"
             )
             if not url_exists:
                 hackerrank_logger.debug(f"Retrying HackerRank URL check for participant {participant.handle}")
                 url_exists, response_url = check_url_exists(
-                    f"https://www.hackerrank.com/profile/{participant.hackerrank_handle}"
+                    f"{HACKERRANK_URL}profile/{participant.hackerrank_handle}"
                 )
             print(f"Respoded with a URL: {response_url}, URL exists: {url_exists}")
         with open(HACKERRANK_FILE, 'a') as file:

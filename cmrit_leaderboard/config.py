@@ -5,8 +5,11 @@ API_KEY = os.getenv('CODEFORCES_KEY')
 API_SECRET = os.getenv('CODEFORCES_SECRET')
 GIT_USERNAME = os.getenv('GIT_USERNAME')
 GIT_PASSWORD = os.getenv('GIT_PASSWORD')
-MONGODB_URI = 'mongodb://localhost:27017/'
-DB_NAME = 'CMRIT_2026_LEADERBOARD'
+GFG_USERNAME = os.getenv("GFG_USERNAME")
+GFG_PASSWORD = os.getenv("GFG_PASSWORD")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+MONGODB_URI = f'mongodb+srv://techtribe:{DB_PASSWORD}@cmrit-2026-leaderboard.0gvol.mongodb.net/?retryWrites=true&w=majority&appName=CMRIT-2026-LEADERBOARD'
+DB_NAME = 'CMRIT-2026-LEADERBOARD'
 USERS_COLLECTION = 'USERS'
 
 # Debugging
@@ -20,7 +23,10 @@ USERNAME_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1UEPRw2UcWdw4ZpmO4q
 CODECHEF_URL = 'https://www.codechef.com/users'
 CODEFORCES_URL = 'https://codeforces.com/api'
 GEEKSFORGEEKS_URL = 'https://auth.geeksforgeeks.org/user'
+GFG_WEEKLY_CONTEST_URL = "https://practiceapi.geeksforgeeks.org/api/latest/events/recurring/gfg-weekly-coding-contest/leaderboard/?leaderboard_type=0&page="
+GFG_PRACTICE_URL = "https://practiceapi.geeksforgeeks.org/api/v1/institute/341/students/stats?page_size=100000&page="
 HACKERRANK_URL = 'https://www.hackerrank.com/'
+HACKERRANK_API_URL = 'https://www.hackerrank.com/rest/contests'
 LEETCODE_URL = 'https://leetcode.com/'
 CODECHEF_API_URL = 'https://code-chef-rating-api.vercel.app/'
 
@@ -44,6 +50,7 @@ CODECHEF_LOG_FILE = 'logs/codechef.log'
 HACKERRANK_LOG_FILE = 'logs/hackerrank.log'
 
 # Leetcode Query
+# Try not to modify this
 LEETCODE_QUERY = '''
 https://leetcode.com/graphql?query=query
 {     
@@ -58,8 +65,29 @@ https://leetcode.com/graphql?query=query
 }
 '''
 
+# Hackerrank Contest URLs
+# Do not leave trailing slashes
+# Meaning no / at the end of the URL
+# Example:
+# "https://www.hackerrank.com/cmrit26-1-basics" ✅
+# "https://www.hackerrank.com/cmrit26-2-lpb/" ❌
+HACKERRANK_CONTEST_URLS = [
+    "https://www.hackerrank.com/cmrit26-1-basics",
+    "https://www.hackerrank.com/cmrit26-2-lpb",
+    "https://www.hackerrank.com/cmrit-2y-2026",
+    "https://www.hackerrank.com/cmrit-may-2024",
+    "https://www.hackerrank.com/cmrit-june-2024",
+    "https://www.hackerrank.com/cmrit-august-2024"
+]
+
+
 # Chrome driver version
 CHROME_DRIVER_VERSION = 128
 
 # Maximum number of requests per second
 MAX_REQUESTS_PER_SECOND = 2
+
+# Rate limiter configuration
+MAX_CALLS_PER_MINUTE = 10
+SECONDS_PER_MINUTE = 60
+CALL_INTERVAL = SECONDS_PER_MINUTE / MAX_CALLS_PER_MINUTE

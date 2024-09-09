@@ -10,4 +10,6 @@ __pycache__/
 /reports
 /logs
 
+geckodriver.exe
+
 foo.txt

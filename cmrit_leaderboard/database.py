@@ -1,5 +1,7 @@
 # cmrit_leaderboard/database.py
 
+import pandas as pd
+
 from pymongo import MongoClient
 from cmrit_leaderboard.config import MONGODB_URI, DB_NAME, USERS_COLLECTION
 
@@ -19,10 +21,16 @@ class Database:
             upsert=True
         )
 
-    def get_users_with_usernames(self, platform):
-        return self.users_collection.find({
-            f'{platform}Username': {'$exists': True, '$ne': None}
-        })
+    def get_existing_users_for_platform(self, platform):
+        # Find users with {paltform}Username field and {paltform}Status True
+        return self.users_collection.find({f'{platform}Username': {'$exists': True, '$ne': None}, f'{platform}Status': True})
 
     def get_all_users(self):
         return self.users_collection.find({})
+    
+    def upload_to_db_with_df(self, users: pd.DataFrame) -> None:
+        for index, row in users.iterrows():
+            data = row.to_dict()
+            data.pop('hallTicketNo', None)
+            self.upsert_user(row['hallTicketNo'], data)
+

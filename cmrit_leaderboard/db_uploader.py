@@ -11,7 +11,10 @@ def upload_to_db():
         CSV_FILE_PATH, 
         header=0, 
         names=['hallticketno', 'geeksforgeeksusername', 'codeforcesusername', 'leetcodeusername', 'codechefusername', 'hackerrankusername'], 
-        converters={c: str.lower for c in ['hallticketno', 'geeksforgeeksusername', 'codeforcesusername', 'leetcodeusername', 'codechefusername', 'hackerrankusername']}
+        converters={
+            c: lambda x: x.lower().replace('@', '') 
+            for c in ['hallticketno', 'geeksforgeeksusername', 'codeforcesusername', 'leetcodeusername', 'codechefusername', 'hackerrankusername']
+        }
     )
 
     # Load the reports

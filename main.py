@@ -33,7 +33,7 @@ def main():
 
     args = parser.parse_args()
 
-    if not any([args.scrape, args.build, args.verify, args.upload]):
+    if not any([args.scrape, args.build, args.verify, args.upload, args.clear]):
         parser.print_help()
     else:
         if args.scrape:

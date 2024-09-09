@@ -4,13 +4,8 @@ import json
 import logging
 import requests
 import time
-from cmrit_leaderboard.config import CODECHEF_FILE, CODECHEF_LOG_FILE, CODECHEF_API_URL, DEBUG
+from cmrit_leaderboard.config import CODECHEF_FILE, CODECHEF_LOG_FILE, CODECHEF_API_URL, CALL_INTERVAL, DEBUG
 from .utils import setup_logger
-
-# Rate limiter configuration
-MAX_CALLS_PER_MINUTE = 10
-SECONDS_PER_MINUTE = 60
-CALL_INTERVAL = SECONDS_PER_MINUTE / MAX_CALLS_PER_MINUTE
 
 codechef_logger = setup_logger("codechef_logger", CODECHEF_LOG_FILE, logging.DEBUG)
 
@@ -35,6 +30,7 @@ def process_codechef(participants):
         codechef_logger.debug(f"Checking CodeChef URL for participant ({index}/{total}) {participant.handle} with handle {participant.codechef_handle}")
         print(f"Checking CodeChef URL for participant ({index}/{total}) {participant.handle} with handle {participant.codechef_handle}")
 
+        codechef_url_exists = False
         if "@" not in participant.codechef_handle and participant.codechef_handle != '':
             if participant.codechef_handle != '#n/a':
                 current_time = time.time()
@@ -53,11 +49,11 @@ def process_codechef(participants):
                     CODECHEF_API_URL + participant.codechef_handle)
                 codechef_logger.debug(f"CodeChef URL exists: {codechef_url_exists}, Response URL: {response_url}")
 
-                # Write participant data to file
-                with open(CODECHEF_FILE, 'a') as file:
-                    file.write(f"{participant.handle}, {participant.codechef_handle}, {codechef_url_exists}\n")
-                codechef_logger.debug(f"Data written to file for participant {participant.handle}: {participant.codechef_handle},"
-                            f" {codechef_url_exists}")
+            # Write participant data to file
+            with open(CODECHEF_FILE, 'a') as file:
+                file.write(f"{participant.handle}, {participant.codechef_handle}, {codechef_url_exists}\n")
+            codechef_logger.debug(f"Data written to file for participant {participant.handle}: {participant.codechef_handle},"
+                        f" {codechef_url_exists}")
 
         # Print progress and debug information
         print(f"Processed participant {index}/{len(participants)}: {participant.handle}")

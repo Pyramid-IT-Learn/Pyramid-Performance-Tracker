@@ -1,6 +1,5 @@
 # verifiers/codeforces.py
 
-import logging
 import requests
 import time
 import re
