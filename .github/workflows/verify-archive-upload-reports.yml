@@ -201,11 +201,34 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Download multiple artifacts
-        uses: marcofaggian/action-download-multiple-artifacts@v1
+      - name: Download Reports for Codechef
+        uses: actions/download-artifact@v4
         with:
-          names: codechef-report codeforces-report geeksforgeeks-report hackerrank-report leetcode-report
-          paths: reports/codechef_handles.txt reports/codeforces_handles.txt reports/geeksforgeeks_handles.txt reports/hackerrank_handles.txt reports/leetcode_handles.txt
+          name: codechef-report
+          path: reports
+
+      - name: Download Reports for Codeforces
+        uses: actions/download-artifact@v4
+        with:
+          name: codeforces-report
+          path: reports
+
+      - name: Download Reports for GeeksforGeeks
+        uses: actions/download-artifact@v4
+        with:
+          name: geeksforgeeks-report
+          path: reports
+
+      - name: Download Reports for HackerRank
+        uses: actions/download-artifact@v4
+        with:
+          name: hackerrank-report
+          path: reports
+
+      - name: Download Reports for LeetCode
+        uses: actions/download-artifact@v4
+        with:
+          name: leetcode-report
 
       - name: Install Dependencies
         run: |
