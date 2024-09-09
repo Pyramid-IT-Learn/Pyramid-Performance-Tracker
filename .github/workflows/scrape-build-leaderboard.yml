@@ -177,14 +177,6 @@ jobs:
         run: |
           python main.py --build
       
-      - name: Archive Leaderboard
-        uses: actions/upload-artifact@v4
-        with:
-          name: leaderboard
-          path: reports/*.csv
-          compression-level: 9
-          retention-days: 5
-      
       - name: Get leaderboard report file path
         id: get_file_path
         run: |
