@@ -46,7 +46,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r usernameVerifier/requirements.txt
+          pip install -r requirements.txt
 
       - name: Verify Users Codechef
         run: |
@@ -77,7 +77,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r usernameVerifier/requirements.txt
+          pip install -r requirements.txt
 
       - name: Verify Users Codeforces
         run: |
@@ -108,7 +108,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r usernameVerifier/requirements.txt
+          pip install -r requirements.txt
 
       - name: Verify Users GeeksforGeeks
         run: |
@@ -139,7 +139,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r usernameVerifier/requirements.txt
+          pip install -r requirements.txt
 
       - name: Verify Users HackerRank
         run: |
@@ -170,7 +170,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r usernameVerifier/requirements.txt
+          pip install -r requirements.txt
 
       - name: Verify Users LeetCode
         run: |
@@ -207,7 +207,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r usernameVerifier/requirements.txt
+          pip install -r requirements.txt
 
       - name: Upload Reports to Database
         env:
