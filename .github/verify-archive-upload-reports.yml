@@ -25,8 +25,8 @@ env:
   GFG_USERNAME: ${{ secrets.GFG_USERNAME }}
   GFG_PASSWORD: ${{ secrets.GFG_PASSWORD }}
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-  API_KEY: ${{ secrets.CODECHEF_API_KEY }}
-  API_SECRET: ${{ secrets.CODECHEF_API_SECRET }}
+  CODEFORCES_KEY: ${{ secrets.CODEFORCES_KEY }}
+  CODEFORCES_SECRET: ${{ secrets.CODEFORCES_SECRET }}
 
 jobs:
   codechef:
