@@ -205,25 +205,21 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: codechef-report
-          path: reports
 
       - name: Download Reports for Codeforces
         uses: actions/download-artifact@v4
         with:
           name: codeforces-report
-          path: reports
 
       - name: Download Reports for GeeksforGeeks
         uses: actions/download-artifact@v4
         with:
           name: geeksforgeeks-report
-          path: reports
 
       - name: Download Reports for HackerRank
         uses: actions/download-artifact@v4
         with:
           name: hackerrank-report
-          path: reports
 
       - name: Download Reports for LeetCode
         uses: actions/download-artifact@v4
