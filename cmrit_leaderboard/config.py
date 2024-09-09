@@ -7,7 +7,8 @@ GIT_USERNAME = os.getenv('GIT_USERNAME')
 GIT_PASSWORD = os.getenv('GIT_PASSWORD')
 GFG_USERNAME = os.getenv("GFG_USERNAME")
 GFG_PASSWORD = os.getenv("GFG_PASSWORD")
-MONGODB_URI = 'mongodb://localhost:27017/'
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+MONGODB_URI = f'mongodb+srv://techtribe:{DB_PASSWORD}@cmrit-2026-leaderboard.0gvol.mongodb.net/?retryWrites=true&w=majority&appName=CMRIT-2026-LEADERBOARD'
 DB_NAME = 'CMRIT-2026-LEADERBOARD'
 USERS_COLLECTION = 'USERS'
 
