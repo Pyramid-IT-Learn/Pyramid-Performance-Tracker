@@ -77,10 +77,10 @@ def main():
                 for file in required_files:
                     if not os.path.exists(f'{file}'):
                         print(f"File '{file}' is missing. Please run the verifier script again.")
-                        exit()
+                        exit(1)
             else:
                 print("Directory 'reports' does not exist. Please run the verifier script again.")
-                exit()
+                exit(1)
 
             print("Uploading data to database...")
             # Call the function from db_uploader to process CSV and update the database

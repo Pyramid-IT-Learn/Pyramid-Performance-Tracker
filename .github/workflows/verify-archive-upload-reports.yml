@@ -226,6 +226,10 @@ jobs:
         with:
           name: leetcode-report
 
+      - name: Print current directory structure
+        run: |
+          tree .
+
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
