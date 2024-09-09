@@ -232,6 +232,7 @@ jobs:
 
       - name: Move all reports to one directory
         run: |
+          mkdir reports
           mv codechef*.txt codeforces*.txt geeksforgeeks*.txt hackerrank*.txt leetcode*.txt reports/
 
       - name: Print current directory structure after moving
