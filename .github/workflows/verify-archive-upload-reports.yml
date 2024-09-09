@@ -2,6 +2,9 @@
 name: Verify & Upload Users
 
 on:
+  push:
+    paths:
+      - 'data/*.csv'
   workflow_dispatch:
     inputs:
       job:
