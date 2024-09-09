@@ -27,6 +27,9 @@ def sheet_download_if_not_exists(file_path, url):
         # Determine the operating system and set the command accordingly
         if platform.system() == "Windows":
             # Windows command using PowerShell
+            # If data folder is not present, create it
+            if not os.path.exists("data"):
+                os.makedirs("data")
             command = [
                 'powershell',
                 '-Command',
@@ -34,6 +37,9 @@ def sheet_download_if_not_exists(file_path, url):
             ]
         else:
             # Non-Windows command using wget
+            # If data folder is not present, create it
+            if not os.path.exists("data"):
+                os.makedirs("data")
             command = [
                 'wget',
                 url,
