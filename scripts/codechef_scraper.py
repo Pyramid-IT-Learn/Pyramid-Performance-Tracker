@@ -17,7 +17,7 @@ def fetch_codechef_score(url):
         return False, response
     except json.decoder.JSONDecodeError:
         print("Invalid JSON response from Codechef API")
-        exit(0)
+        exit(1)
 
 def scrape_codechef(users: pd.DataFrame) -> pd.DataFrame: 
     last_request_time = time.time()
