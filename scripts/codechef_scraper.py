@@ -1,27 +1,46 @@
-# scripts/codechef_scraper.py
-
 import time
 import json
 import requests
 import pandas as pd
 
-from cmrit_leaderboard.config import CODECHEF_API_URL, CALL_INTERVAL, DEBUG
+from cmrit_leaderboard.config import CODECHEF_API_URL, CALL_INTERVAL, CODECHEF_CLIENT_ID, CODECHEF_CLIENT_SECRET, DEBUG
 
-def fetch_codechef_score(url):
+def fetch_codechef_access_token():
+    response = requests.post("https://api.codechef.com/oauth/token",
+                         data={"grant_type": "client_credentials",
+                               "scope": "public",
+                               "client_id": f"{CODECHEF_CLIENT_ID}",
+                               "client_secret": f"{CODECHEF_CLIENT_SECRET}",
+                               "redirect_uri": ""})
+    json_data = response.json()
+
+    access_token = json_data["result"]["data"]["access_token"]
+
+    return access_token
+
+def fetch_codechef_score(username, access_token):
     try:
-        response = requests.get(url)
-        response_json = response.json()
-        # if success is true in the response json
-        if response_json.get("success"):
-            return True, response
-        return False, response
+        response = requests.get(f"{CODECHEF_API_URL}/users/{username}",
+                                   headers={f"Authorization": f"Bearer {access_token}"},
+                                   params={"fields": "ratings"},
+                                   timeout=10)
+        
+        if response.status_code == 200:
+            return response.json()["result"]["data"]["content"]["ratings"]["allContest"]
+        else:
+            print(f"Error: {response.status_code} - {response.text}")
+            return None
+        
     except json.decoder.JSONDecodeError:
         print("Invalid JSON response from Codechef API")
         exit(1)
 
-def scrape_codechef(users: pd.DataFrame) -> pd.DataFrame: 
+def scrape_codechef(users: pd.DataFrame) -> pd.DataFrame:
     last_request_time = time.time()
     total = len(users)
+    
+    access_token = fetch_codechef_access_token()
+    token_fetch_time = time.time()  # Track when the token was fetched
 
     for index, user in users.iterrows():
         print("--" * 10)
@@ -35,6 +54,13 @@ def scrape_codechef(users: pd.DataFrame) -> pd.DataFrame:
             if codechef_handle != '#n/a':
                 current_time = time.time()
                 time_since_last_request = current_time - last_request_time
+
+                # Check if the token needs to be refreshed
+                if current_time - token_fetch_time >= 3600:  # Token validity check (1 hour)
+                    print("Access token expired. Fetching a new token...")
+                    access_token = fetch_codechef_access_token()
+                    token_fetch_time = time.time()  # Update the token fetch time
+
                 if time_since_last_request < CALL_INTERVAL:
                     wait_time = CALL_INTERVAL - time_since_last_request
                     print(f"Rate limit in effect. Waiting for {wait_time:.2f} seconds.")
@@ -43,21 +69,11 @@ def scrape_codechef(users: pd.DataFrame) -> pd.DataFrame:
                 # Update the last request time
                 last_request_time = time.time()
 
-                # Check if CodeChef URL exists
-                codechef_url_exists, response = fetch_codechef_score(
-                    CODECHEF_API_URL + codechef_handle)
-                print(f"CodeChef URL exists: {codechef_url_exists}, Response: {response.text}")
+                # Get CodeChef score
+                codechef_score = fetch_codechef_score(codechef_handle, access_token)
 
-                rating = 0
-                try:
-                    temp = response.json().get("currentRating")
-                    if temp is not None:
-                        rating = temp
-                except json.decoder.JSONDecodeError:
-                    print("Invalid JSON response from Codechef API")
-
-                # Write participant data to file
-                codechef_score = rating
+                if codechef_score is None:
+                    codechef_score = 0
 
         # Update the DataFrame
         users.loc[index, 'codechefRating'] = codechef_score
@@ -67,4 +83,3 @@ def scrape_codechef(users: pd.DataFrame) -> pd.DataFrame:
         print("--" * 10)
 
     return users
-

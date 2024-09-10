@@ -1,4 +1,3 @@
-
 name: Verify & Upload Users
 
 on:
@@ -28,6 +27,8 @@ env:
   GFG_USERNAME: ${{ secrets.GFG_USERNAME }}
   GFG_PASSWORD: ${{ secrets.GFG_PASSWORD }}
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  CODECHEF_CLIENT_ID: ${{ secrets.CODECHEF_CLIENT_ID }}
+  CODECHEF_CLIENT_SECRET: ${{ secrets.CODECHEF_CLIENT_SECRET }}
   CODEFORCES_KEY: ${{ secrets.CODEFORCES_KEY }}
   CODEFORCES_SECRET: ${{ secrets.CODEFORCES_SECRET }}
 
@@ -256,12 +257,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: 'Triggering scrape-build-leaderboard.yml'
-            })
             github.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,

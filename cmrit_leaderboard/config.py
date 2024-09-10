@@ -7,6 +7,8 @@ GIT_USERNAME = os.getenv('GIT_USERNAME')
 GIT_PASSWORD = os.getenv('GIT_PASSWORD')
 GFG_USERNAME = os.getenv("GFG_USERNAME")
 GFG_PASSWORD = os.getenv("GFG_PASSWORD")
+CODECHEF_CLIENT_ID = os.getenv("CODECHEF_CLIENT_ID")
+CODECHEF_CLIENT_SECRET = os.getenv("CODECHEF_CLIENT_SECRET")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 MONGODB_URI = f'mongodb+srv://techtribe:{DB_PASSWORD}@cmrit-2026-leaderboard.0gvol.mongodb.net/?retryWrites=true&w=majority&appName=CMRIT-2026-LEADERBOARD'
 DB_NAME = 'CMRIT-2026-LEADERBOARD'
@@ -28,7 +30,7 @@ GFG_PRACTICE_URL = "https://practiceapi.geeksforgeeks.org/api/v1/institute/341/s
 HACKERRANK_URL = 'https://www.hackerrank.com/'
 HACKERRANK_API_URL = 'https://www.hackerrank.com/rest/contests'
 LEETCODE_URL = 'https://leetcode.com/'
-CODECHEF_API_URL = 'https://code-chef-rating-api.vercel.app/'
+CODECHEF_API_URL = 'https://api.codechef.com/'
 
 # File paths
 HACKERRANK_URLS_FILE = 'data/hackerrank_urls.txt'
@@ -88,6 +90,6 @@ CHROME_DRIVER_VERSION = 128
 MAX_REQUESTS_PER_SECOND = 2
 
 # Rate limiter configuration
-MAX_CALLS_PER_MINUTE = 9
-SECONDS_PER_MINUTE = 60
+MAX_CALLS_PER_MINUTE = 75
+SECONDS_PER_MINUTE = 300
 CALL_INTERVAL = SECONDS_PER_MINUTE / MAX_CALLS_PER_MINUTE
