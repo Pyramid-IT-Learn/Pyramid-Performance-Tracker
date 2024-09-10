@@ -26,6 +26,10 @@ def fetch_codeforces_scores(handles):
     except requests.RequestException as e:
         print(f"Error fetching Codeforces data: {e}")
         raise Exception("Failed to fetch Codeforces data.")
+    except json.decoder.JSONDecodeError:
+        print("Invalid JSON response from Codeforces API")
+        print(response.text)
+        raise Exception("Invalid JSON response from Codeforces API")
 
 def scrape_codeforces(users: pd.DataFrame) -> pd.DataFrame:
     print("Starting Codeforces processing")
