@@ -71,6 +71,9 @@ def main():
                 process_leetcode(participants)
 
         if args.upload:
+            url = USERNAME_SHEET_URL
+            file_path = CSV_FILE_PATH
+            
             sheet_download_if_not_exists(file_path, url)
             # Make sure reports directory exists and has all the required files
             if os.path.exists('reports'):
