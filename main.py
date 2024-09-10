@@ -71,6 +71,7 @@ def main():
                 process_leetcode(participants)
 
         if args.upload:
+            sheet_download_if_not_exists(file_path, url)
             # Make sure reports directory exists and has all the required files
             if os.path.exists('reports'):
                 required_files = [CODECHEF_FILE, CODEFORCES_FILE, GEEKSFORGEEKS_FILE, HACKERRANK_FILE, LEETCODE_FILE]
