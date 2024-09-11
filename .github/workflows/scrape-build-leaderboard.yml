@@ -1,6 +1,11 @@
 name: Scrape & Build Leaderboard
 
 on:
+  workflow_run:
+    workflows:
+      - Verify & Upload Users
+    types:
+      - completed
   workflow_dispatch:
     inputs:
       job:
