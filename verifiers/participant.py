@@ -73,7 +73,8 @@ def load_participants(file_path):
             leetcode_handle = leetcode_handle.lower()
             codechef_handle = codechef_handle.lower()
             hackerrank_handle = hackerrank_handle.lower()
-            print(f"( {count} / {total_rows} ) Loading participant {handle}")  # Print progress
+            if count % 100 == 0 or count == total_rows:  # Only print progress every 100 participants
+                print(f"( {count} / {total_rows} ) Loading participant {handle}")  # Print progress
             participant = Participant(handle, geeksforgeeks_handle, codeforces_handle, leetcode_handle, codechef_handle,
                                     hackerrank_handle)  # Create Participant object
             participants.append(participant)  # Add Participant object to list
