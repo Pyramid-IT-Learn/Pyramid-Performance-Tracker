@@ -30,7 +30,9 @@ def fetch_codechef_score(username, access_token):
         else:
             print(f"Error: {response.status_code} - {response.text}")
             return None
-        
+    except KeyError:
+        print("Invalid JSON response from Codechef API")
+        return None
     except json.decoder.JSONDecodeError:
         print("Invalid JSON response from Codechef API")
         exit(1)
