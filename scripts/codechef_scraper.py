@@ -56,10 +56,13 @@ def scrape_codechef(users: pd.DataFrame) -> pd.DataFrame:
                 time_since_last_request = current_time - last_request_time
 
                 # Check if the token needs to be refreshed
-                if current_time - token_fetch_time >= 3600:  # Token validity check (1 hour)
+                if current_time - token_fetch_time >= 3000:  # Token validity check (1 hour)
                     print("Access token expired. Fetching a new token...")
                     access_token = fetch_codechef_access_token()
                     token_fetch_time = time.time()  # Update the token fetch time
+                
+                print("Time since last token refresh:", time_since_last_request)
+                print("Time left to create new token:", 3000 - (current_time - token_fetch_time))
 
                 if time_since_last_request < CALL_INTERVAL:
                     wait_time = CALL_INTERVAL - time_since_last_request

@@ -62,7 +62,7 @@ def process_codechef(participants):
                 time_since_last_request = current_time - last_request_time
 
                 # Check if the token needs to be refreshed
-                if current_time - token_fetch_time >= 3600:  # Token validity check (1 hour)
+                if current_time - token_fetch_time >= 3000:  # Token validity check (1 hour)
                     print("Access token expired. Fetching a new token...")
                     codechef_logger.debug("Access token expired. Fetching a new token...")
                     access_token = fetch_codechef_access_token()
