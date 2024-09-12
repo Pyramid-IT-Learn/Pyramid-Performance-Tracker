@@ -32,6 +32,9 @@ def fetch_codechef_score(username, access_token):
             return None
     except KeyError:
         print("Invalid JSON response from Codechef API")
+        print("--" * 30)
+        print(response.text)
+        print("--" * 30)
         return None
     except json.decoder.JSONDecodeError:
         print("Invalid JSON response from Codechef API")
