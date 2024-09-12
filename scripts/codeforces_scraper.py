@@ -68,7 +68,7 @@ def scrape_codeforces(users: pd.DataFrame) -> pd.DataFrame:
                     except KeyError:
                         print(f"KeyError: {user['handle']}")
                         print("--" * 30)
-                        print(response.text)
+                        print(user)
                         print("--" * 30)
                     except json.decoder.JSONDecodeError:
                         print(f"JSON error: {user['handle']}")
