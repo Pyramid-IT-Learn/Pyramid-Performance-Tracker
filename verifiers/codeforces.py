@@ -1,5 +1,6 @@
 # verifiers/codeforces.py
 
+import json
 import requests
 import time
 import re
@@ -24,6 +25,9 @@ def check_codeforces_users(handles):
         json_response = response.json()
         codeforces_logger.debug(f"Response from Codeforces API: {json_response}")
         return json_response
+    except json.decoder.JSONDecodeError:
+        codeforces_logger.error(f"Invalid JSON response from Codeforces API: {response.text}")
+        raise Exception("Invalid JSON response from Codeforces API")
     except requests.RequestException as e:
         codeforces_logger.error(f"Error fetching Codeforces data: {e}")
         raise Exception("Failed to fetch Codeforces data.")
