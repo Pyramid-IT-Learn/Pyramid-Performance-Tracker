@@ -10,19 +10,26 @@ codechef_logger = setup_logger("codechef_logger", CODECHEF_LOG_FILE, logging.DEB
 
 
 def fetch_codechef_access_token():
-    response = requests.post("https://api.codechef.com/oauth/token",
-                         data={"grant_type": "client_credentials",
-                               "scope": "public",
-                               "client_id": f"{CODECHEF_CLIENT_ID}",
-                               "client_secret": f"{CODECHEF_CLIENT_SECRET}",
-                               "redirect_uri": ""})
-    json_data = response.json()
+    try:
+        response = requests.post("https://api.codechef.com/oauth/token",
+                             data={"grant_type": "client_credentials",
+                                   "scope": "public",
+                                   "client_id": f"{CODECHEF_CLIENT_ID}",
+                                   "client_secret": f"{CODECHEF_CLIENT_SECRET}",
+                                   "redirect_uri": ""})
+        json_data = response.json()
 
-    print(json.dumps(json_data, indent=2))
+        print(json.dumps(json_data, indent=2))
 
-    access_token = json_data["result"]["data"]["access_token"]
+        access_token = json_data["result"]["data"]["access_token"]
 
-    return access_token
+        return access_token
+    except json.decoder.JSONDecodeError:
+        print("Invalid JSON response from Codechef API")
+        print("--" * 30)
+        print(response.text)
+        print("--" * 30)
+        exit(1)
 
 def check_codechef_url(username, access_token):
     try:
@@ -42,6 +49,9 @@ def check_codechef_url(username, access_token):
         
     except json.decoder.JSONDecodeError:
         print("Invalid JSON response from Codechef API")
+        print("--" * 30)
+        print(response.text)
+        print("--" * 30)
         exit(1)
 
 def process_codechef(participants):
