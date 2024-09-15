@@ -53,7 +53,7 @@ def check_url_exists(url):
         return False, "Exception"
 
 def process_hackerrank(participants):
-    for participant in participants:
+    for index, participant in enumerate(participants, 1):
         print(f"Processing HackerRank handle {participant.hackerrank_handle} for participant {participant.handle}: ")
         url_exists = False
         if participant.hackerrank_handle and participant.hackerrank_handle != '#n/a':
@@ -65,7 +65,7 @@ def process_hackerrank(participants):
                 url_exists, response_url = check_url_exists(
                     f"{HACKERRANK_URL}profile/{participant.hackerrank_handle}"
                 )
-            print(f"Respoded with a URL: {response_url}, URL exists: {url_exists}")
+            print(f"{index}/{len(participants)} - Respoded with a URL: {response_url}, URL exists: {url_exists}")
         with open(HACKERRANK_FILE, 'a') as file:
             file.write(f"{participant.handle}, {participant.hackerrank_handle}, {url_exists}\n")
         hackerrank_logger.debug(f"Data written to file for participant {participant.handle}")
