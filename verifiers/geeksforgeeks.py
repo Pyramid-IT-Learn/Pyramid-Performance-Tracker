@@ -44,7 +44,6 @@ def check_geekforgeeks_url_api(url):
                 return False
         except KeyError:
             print("KeyError for url: " + url)
-            exit(1)
         return True
     return False
 
