@@ -2,7 +2,7 @@
 
 import logging
 import requests
-from cmrit_leaderboard.config import GEEKSFORGEEKS_FILE, GEEKSFORGEEKS_LOG_FILE, DEBUG
+from cmrit_leaderboard.config import GEEKSFORGEEKS_FILE, GEEKSFORGEEKS_LOG_FILE, GFG_API_URL, DEBUG
 from .utils import setup_logger
 
 geeks_for_geeks_logger = setup_logger('geeks_for_geeks_logger', GEEKSFORGEEKS_LOG_FILE, DEBUG)
@@ -34,6 +34,19 @@ def check_geekforgeeks_url(url):
         return False, response.url
     except requests.exceptions.RequestException:
         return False, "Exception"
+    
+def check_geekforgeeks_url_api(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        response_json = response.json()
+        try:
+            if response_json['data']['message'] == 'User not found!':
+                return False
+        except KeyError:
+            print("KeyError for url: " + url)
+            exit(1)
+        return True
+    return False
 
 def process_geeksforgeeks(participants):
     # Iterate through each participant
@@ -41,21 +54,30 @@ def process_geeksforgeeks(participants):
     for i, participant in enumerate(participants, 1):
         geeksforgeeks_url_exists = False
 
+        # Old method for verifying
+        # if participant.geeksforgeeks_handle != '#n/a':
+        #     # Check if GeeksForGeeks handle is valid
+        #     geeks_for_geeks_logger.debug(f"Checking GeeksForGeeks URL for participant {participant.handle}")
+
+        #     # Check if the GeeksForGeeks URL exists
+        #     geeksforgeeks_url_exists, response_url = check_geekforgeeks_url(
+        #         "https://auth.geeksforgeeks.org/user/" + participant.geeksforgeeks_handle)
+        #     geeks_for_geeks_logger.debug(f"GeeksForGeeks URL exists: {geeksforgeeks_url_exists}, Response URL: {response_url}")
+
+        #     # Retry if the GeeksForGeeks URL does not exist
+        #     if not geeksforgeeks_url_exists and participant.geeksforgeeks_handle != '#N/A':
+        #         geeks_for_geeks_logger.debug(f"Retrying GeeksForGeeks URL check for participant {participant.handle}")
+        #         geeksforgeeks_url_exists, response_url = check_geekforgeeks_url(
+        #             "https://auth.geeksforgeeks.org/user/" + participant.geeksforgeeks_handle)
+        #         geeks_for_geeks_logger.debug(f"GeeksForGeeks URL retry: {geeksforgeeks_url_exists}, Response URL: {response_url}")
+
         if participant.geeksforgeeks_handle != '#n/a':
-            # Check if GeeksForGeeks handle is valid
+            geeks_for_geeks_url = GFG_API_URL + participant.geeksforgeeks_handle
             geeks_for_geeks_logger.debug(f"Checking GeeksForGeeks URL for participant {participant.handle}")
 
             # Check if the GeeksForGeeks URL exists
-            geeksforgeeks_url_exists, response_url = check_geekforgeeks_url(
-                "https://auth.geeksforgeeks.org/user/" + participant.geeksforgeeks_handle)
-            geeks_for_geeks_logger.debug(f"GeeksForGeeks URL exists: {geeksforgeeks_url_exists}, Response URL: {response_url}")
-
-            # Retry if the GeeksForGeeks URL does not exist
-            if not geeksforgeeks_url_exists and participant.geeksforgeeks_handle != '#N/A':
-                geeks_for_geeks_logger.debug(f"Retrying GeeksForGeeks URL check for participant {participant.handle}")
-                geeksforgeeks_url_exists, response_url = check_geekforgeeks_url(
-                    "https://auth.geeksforgeeks.org/user/" + participant.geeksforgeeks_handle)
-                geeks_for_geeks_logger.debug(f"GeeksForGeeks URL retry: {geeksforgeeks_url_exists}, Response URL: {response_url}")
+            geeksforgeeks_url_exists = check_geekforgeeks_url_api(geeks_for_geeks_url)
+            geeks_for_geeks_logger.debug(f"GeeksForGeeks URL exists: {geeksforgeeks_url_exists}")
 
         # Write participant data to file
         with open(GEEKSFORGEEKS_FILE, 'a') as file:

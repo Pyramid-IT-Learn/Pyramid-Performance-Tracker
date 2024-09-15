@@ -39,7 +39,7 @@ env:
 jobs:
 
   codechef:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codechef' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codechef' || github.event == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -62,7 +62,7 @@ jobs:
           python main.py --scrape codechef
 
   codeforces:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codeforces' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codeforces' || github.event == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -85,7 +85,7 @@ jobs:
           python main.py --scrape codeforces
 
   geeksforgeeks:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'geeksforgeeks' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'geeksforgeeks' || github.event == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -113,7 +113,7 @@ jobs:
           python main.py --scrape geeksforgeeks
 
   hackerrank:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'hackerrank' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'hackerrank' || github.event == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -136,7 +136,7 @@ jobs:
           python main.py --scrape hackerrank
 
   leetcode:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'leetcode' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'leetcode' || github.event == 'schedule' }}
     runs-on: windows-latest
     steps:
       - uses: browser-actions/setup-chrome@v1

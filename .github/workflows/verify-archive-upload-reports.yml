@@ -1,9 +1,6 @@
 name: Verify & Upload Users
 
 on:
-  push:
-    paths:
-      - 'data/*.csv'
   workflow_dispatch:
     inputs:
       job:
@@ -34,7 +31,7 @@ env:
 
 jobs:
   codechef:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codechef' || github.event == 'schedule' || github.event == 'push' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codechef' || github.event == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -65,7 +62,7 @@ jobs:
           retention-days: 5
 
   codeforces:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codeforces' || github.event == 'schedule' || github.event == 'push' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codeforces' || github.event == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -96,7 +93,7 @@ jobs:
           retention-days: 5
 
   geeksforgeeks:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'geeksforgeeks' || github.event == 'schedule' || github.event == 'push' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'geeksforgeeks' || github.event == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -127,7 +124,7 @@ jobs:
           retention-days: 5
 
   hackerrank:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'hackerrank' || github.event == 'schedule' || github.event == 'push' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'hackerrank' || github.event == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -158,7 +155,7 @@ jobs:
           retention-days: 5
 
   leetcode:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'leetcode' || github.event == 'schedule' || github.event == 'push' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'leetcode' || github.event == 'schedule' }}
     runs-on: windows-latest
     steps:
       - uses: browser-actions/setup-chrome@v1

@@ -27,6 +27,7 @@ CODEFORCES_URL = 'https://codeforces.com/api'
 GEEKSFORGEEKS_URL = 'https://auth.geeksforgeeks.org/user'
 GFG_WEEKLY_CONTEST_URL = "https://practiceapi.geeksforgeeks.org/api/latest/events/recurring/gfg-weekly-coding-contest/leaderboard/?leaderboard_type=0&page="
 GFG_PRACTICE_URL = "https://practiceapi.geeksforgeeks.org/api/v1/institute/341/students/stats?page_size=100000&page="
+GFG_API_URL = "https://authapi.geeksforgeeks.org/api-get/user-profile-info/?handle="
 HACKERRANK_URL = 'https://www.hackerrank.com/'
 HACKERRANK_API_URL = 'https://www.hackerrank.com/rest/contests'
 LEETCODE_URL = 'https://leetcode.com/'

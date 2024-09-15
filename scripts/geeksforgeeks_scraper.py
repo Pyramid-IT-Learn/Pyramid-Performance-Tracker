@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import NoSuchElementException
-from cmrit_leaderboard.config import GFG_WEEKLY_CONTEST_URL, GFG_PRACTICE_URL, GEEKSFORGEEKS_URL, GFG_USERNAME, GFG_PASSWORD, DEBUG
+from cmrit_leaderboard.config import GFG_WEEKLY_CONTEST_URL, GFG_PRACTICE_URL, GFG_API_URL, GEEKSFORGEEKS_URL, GFG_USERNAME, GFG_PASSWORD, DEBUG
 import time
 
 def scrape_geeksforgeeks_weekly_contest(users: pd.DataFrame) -> pd.DataFrame:
@@ -50,6 +50,9 @@ def scrape_geeksforgeeks_weekly_contest(users: pd.DataFrame) -> pd.DataFrame:
             break
 
     return users
+
+"""
+# Scrape GeeksforGeeks practice ratings: The long and tedious process is done here. #
 
 def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
     # Create geeksforgeeksPracticeRating column
@@ -137,9 +140,36 @@ def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
     
     return users
 
+"""
+
+def scrape_geeksforgeeks_practice_api(users: pd.DataFrame) -> pd.DataFrame:
+    # Create geeksforgeeksPracticeRating column
+    users['geeksforgeeksPracticeRating'] = 0
+    print("GFG practice scraping in progress...")
+
+    # Initialize counter
+    counter = 1
+
+    for index, user in users.iterrows():
+        gfg_handle = user['geeksforgeeksUsername']
+        print(f"Practice rating not found for {user['hallTicketNo']} with GFG handle {gfg_handle}. Fetching from profile...")
+
+        try:
+            response = requests.get(f"{GEEKSFORGEEKS_URL}{gfg_handle}")
+            if response.status_code == 200:
+                json_response = response.json()
+                if json_response.get('message') == 'User not found!':
+                    continue
+                if json_response.get('data', {}).get('score') is not None:
+                    gfg_rating = json_response['data']['score']
+                users.at[index, 'geeksforgeeksPracticeRating'] = gfg_rating
+                print(f"Found practice rating for {index}/{len(users)} {user['handle']} with GFG handle {gfg_handle}: {gfg_rating}")
+        except Exception as e:
+            print(f"Error fetching practice rating for {gfg_handle}: {e}")
+
 def scrape_geeksforgeeks(users: pd.DataFrame) -> pd.DataFrame:
     users = scrape_geeksforgeeks_weekly_contest(users)
-    users = scrape_geeksforgeeks_practice(users)
+    users = scrape_geeksforgeeks_practice_api(users)
 
     print("GFG scraping completed.")
     print(users[['hallTicketNo', 'geeksforgeeksUsername', 'geeksforgeeksWeeklyRating', 'geeksforgeeksPracticeRating']])
