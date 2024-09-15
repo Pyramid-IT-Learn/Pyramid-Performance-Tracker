@@ -37,14 +37,15 @@ def check_geekforgeeks_url(url):
     
 def check_geekforgeeks_url_api(url):
     response = requests.get(url)
+    response_json = response.json()
     if response.status_code == 200:
-        response_json = response.json()
         try:
             if response_json['data']['message'] == 'User not found!':
                 return False
         except KeyError:
-            print("KeyError for url: " + url)
+            print("(+ve) KeyError for url: " + url + " with status code: " + str(response.status_code))
         return True
+    print("Respose code: " + str(response.status_code) + " for url: " + url)
     return False
 
 def process_geeksforgeeks(participants):
