@@ -90,6 +90,8 @@ def process_codeforces(participants):
             else:
                 codeforces_logger.error(f"API Error: {response.get('comment', 'Unknown error')}")
                 break
+        
+        time.sleep(10)
 
     # Write the report to a file
     with open(CODEFORCES_FILE, 'w') as f:
