@@ -14,3 +14,4 @@ geckodriver.exe
 load-env-as-secrets.ps1
 
 foo.txt
+test.py

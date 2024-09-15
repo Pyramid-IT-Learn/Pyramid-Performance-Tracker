@@ -152,7 +152,6 @@ def scrape_geeksforgeeks_practice_api(users: pd.DataFrame) -> pd.DataFrame:
 
     for index, user in users.iterrows():
         gfg_handle = user['geeksforgeeksUsername']
-        print(f"Practice rating not found for {user['hallTicketNo']} with GFG handle {gfg_handle}. Fetching from profile...")
 
         try:
             response = requests.get(f"{GEEKSFORGEEKS_URL}{gfg_handle}")
@@ -162,10 +161,18 @@ def scrape_geeksforgeeks_practice_api(users: pd.DataFrame) -> pd.DataFrame:
                     continue
                 if json_response.get('data', {}).get('score') is not None:
                     gfg_rating = json_response['data']['score']
+                else:
+                    gfg_rating = 0
                 users.at[index, 'geeksforgeeksPracticeRating'] = gfg_rating
                 print(f"Found practice rating for {index}/{len(users)} {user['handle']} with GFG handle {gfg_handle}: {gfg_rating}")
         except Exception as e:
             print(f"Error fetching practice rating for {gfg_handle}: {e}")
+
+        counter += 1
+
+    print("GFG practice scraping completed.")
+
+    return users
 
 def scrape_geeksforgeeks(users: pd.DataFrame) -> pd.DataFrame:
     users = scrape_geeksforgeeks_weekly_contest(users)
