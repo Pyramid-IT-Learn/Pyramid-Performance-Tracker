@@ -57,9 +57,6 @@ def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
     users['geeksforgeeksPracticeRating'] = 0
     print("GFG practice scraping in progress...")
     
-    # Initialize counter
-    counter = 1
-    
     # Initialize Firefox driver
     options = Options()
     options.add_argument("-headless")
@@ -85,15 +82,13 @@ def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
     for index, user in users.iterrows():
         if not pd.isna(user['geeksforgeeksPracticeRating']):
             gfg_handle = user['geeksforgeeksUsername']
-            print(f"Checking practice rating for {user['hallTicketNo']} with GFG handle {gfg_handle}. Fetching from profile...")
-            driver.get(f"{GFG_API_URL}{gfg_handle}")
+            driver.get(f"view-source:{GFG_API_URL}{gfg_handle}")
             time.sleep(0.1)
             
             try:
                 # Parse JSON response
                 try:
-                    # json element has id json
-                    json_element = driver.find_element(By.ID, "json")
+                    json_element = driver.find_element(By.TAG_NAME, "pre")
                     json_content = json.loads(json_element.text)
                 except Exception as e:
                     raise RuntimeError(f"Error parsing JSON response for {user['hallTicketNo']} with LeetCode handle {gfg_handle}: {e}")
@@ -107,7 +102,6 @@ def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
                 
                 print(f"Found practice rating for {user['hallTicketNo']} with GFG handle {gfg_handle}: {gfg_rating}")
 
-                counter += 1
             except (NoSuchElementException, ValueError) as e:
                 print(f"Error fetching practice rating for {gfg_handle}: {e}")
 
