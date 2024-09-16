@@ -1,0 +1,53 @@
+name: Leaderboard Builder
+
+on:
+  workflow_dispatch:
+
+env:
+  GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+  GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+  GFG_USERNAME: ${{ secrets.GFG_USERNAME }}
+  GFG_PASSWORD: ${{ secrets.GFG_PASSWORD }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  CODECHEF_CLIENT_ID: ${{ secrets.CODECHEF_CLIENT_ID }}
+  CODECHEF_CLIENT_SECRET: ${{ secrets.CODECHEF_CLIENT_SECRET }}
+  CODEFORCES_KEY: ${{ secrets.CODEFORCES_KEY }}
+  CODEFORCES_SECRET: ${{ secrets.CODEFORCES_SECRET }}
+
+jobs:
+  build:
+      needs: [codechef, codeforces, geeksforgeeks, hackerrank, leetcode]
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4.1.1
+          with:
+            ref: ${{ github.ref }}
+        
+        - name: Set up Python 3.10
+          uses: actions/setup-python@v5
+          with:
+            python-version: "3.10"
+        
+        - name: Install Dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+        
+        - name: Build Leaderboard
+          run: |
+            python main.py --build
+        
+        - name: Get leaderboard report file path
+          id: get_file_path
+          run: |
+            LEADERBOARD_REPORT_FILE=$(python -c "from cmrit_leaderboard.config import LEADERBOARD_REPORT_FILE; print(LEADERBOARD_REPORT_FILE)")
+            echo "LEADERBOARD_REPORT_FILE=${LEADERBOARD_REPORT_FILE}" >> $GITHUB_ENV
+
+        - name: Archive Leaderboard
+          uses: actions/upload-artifact@v4
+          with:
+            name: leaderboard
+            path: ${{ env.LEADERBOARD_REPORT_FILE }}
+            compression-level: 9
+            retention-days: 5

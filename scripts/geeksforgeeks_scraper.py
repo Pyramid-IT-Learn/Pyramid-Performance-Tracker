@@ -147,11 +147,9 @@ def scrape_geeksforgeeks_practice_api(users: pd.DataFrame) -> pd.DataFrame:
     users['geeksforgeeksPracticeRating'] = 0
     print("GFG practice scraping in progress...")
 
-    # Initialize counter
-    counter = 1
-
     for index, user in users.iterrows():
         gfg_handle = user['geeksforgeeksUsername']
+        gfg_rating = 0
 
         try:
             response = requests.get(f"{GEEKSFORGEEKS_URL}{gfg_handle}")
@@ -164,19 +162,17 @@ def scrape_geeksforgeeks_practice_api(users: pd.DataFrame) -> pd.DataFrame:
                 else:
                     gfg_rating = 0
                 users.at[index, 'geeksforgeeksPracticeRating'] = gfg_rating
-                print(f"Found practice rating for {index}/{len(users)} {user['handle']} with GFG handle {gfg_handle}: {gfg_rating}")
+            print(f"Found practice rating for {index+1}/{len(users)} {user['hallTicketNo']} with GFG handle {gfg_handle}: {gfg_rating}")
         except Exception as e:
             print(f"Error fetching practice rating for {gfg_handle}: {e}")
-
-        counter += 1
 
     print("GFG practice scraping completed.")
 
     return users
 
 def scrape_geeksforgeeks(users: pd.DataFrame) -> pd.DataFrame:
+    users = scrape_geeksforgeeks_practice_api(users)  
     users = scrape_geeksforgeeks_weekly_contest(users)
-    users = scrape_geeksforgeeks_practice_api(users)
 
     print("GFG scraping completed.")
     print(users[['hallTicketNo', 'geeksforgeeksUsername', 'geeksforgeeksWeeklyRating', 'geeksforgeeksPracticeRating']])
