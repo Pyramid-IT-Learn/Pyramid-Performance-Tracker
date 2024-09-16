@@ -93,8 +93,12 @@ def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
                 except Exception as e:
                     raise RuntimeError(f"Error parsing JSON response for {user['hallTicketNo']} with LeetCode handle {gfg_handle}: {e}")
                 
-                gfg_rating = json_content['data']['score']
-
+                try:
+                    gfg_rating = json_content['data']['score']
+                except Exception as e:
+                    print(f"Error fetching practice rating for {gfg_handle}: {e.__class__.__name__} - {e}")
+                    gfg_rating = 0
+                    
                 if gfg_rating is None:
                     gfg_rating = 0
 
