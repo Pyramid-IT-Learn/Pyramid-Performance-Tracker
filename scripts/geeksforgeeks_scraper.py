@@ -98,13 +98,13 @@ def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
                 except Exception as e:
                     print(f"Error fetching practice rating for {gfg_handle}: {e.__class__.__name__} - {e}")
                     gfg_rating = 0
-                    
+
                 if gfg_rating is None:
                     gfg_rating = 0
 
                 users.at[index, 'geeksforgeeksPracticeRating'] = gfg_rating
                 
-                print(f"Found practice rating for {user['hallTicketNo']} with GFG handle {gfg_handle}: {gfg_rating}")
+                print(f"{index+1}/{len(users)} - Found practice rating for {user['hallTicketNo']} with GFG handle {gfg_handle}: {gfg_rating}")
 
             except (NoSuchElementException, ValueError) as e:
                 print(f"Error fetching practice rating for {gfg_handle}: {e}")
