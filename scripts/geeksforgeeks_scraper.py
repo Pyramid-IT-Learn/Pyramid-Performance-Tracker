@@ -66,6 +66,7 @@ def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
     driver = webdriver.Firefox(options=options)
     
     # Log in to GeeksforGeeks
+    print("Logging in to GeeksforGeeks...")
     driver.get("https://auth.geeksforgeeks.org/")
     try:
         username = driver.find_element(By.ID, "luser")
@@ -73,6 +74,7 @@ def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
         username.send_keys(GFG_USERNAME)
         password.send_keys(GFG_PASSWORD)
         driver.find_element(By.CLASS_NAME, "signin-button").click()
+        print("Login successful.")
         time.sleep(5)  # Wait for the login process
     except Exception as e:
         print(f"Login error: {e}")
@@ -81,17 +83,18 @@ def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
 
     # Scrape individual user profiles if practice rating is not available
     for index, user in users.iterrows():
-        if pd.isna(user['geeksforgeeksPracticeRating']):
+        if not pd.isna(user['geeksforgeeksPracticeRating']):
             gfg_handle = user['geeksforgeeksUsername']
-            print(f"Practice rating not found for {user['hallTicketNo']} with GFG handle {gfg_handle}. Fetching from profile...")
+            print(f"Checking practice rating for {user['hallTicketNo']} with GFG handle {gfg_handle}. Fetching from profile...")
             driver.get(f"{GFG_API_URL}{gfg_handle}")
             time.sleep(0.1)
             
             try:
                 # Parse JSON response
                 try:
-                    json_content = driver.find_element(By.TAG_NAME, "pre").text
-                    json_content = json.loads(json_content)
+                    # json element has id json
+                    json_element = driver.find_element(By.ID, "json")
+                    json_content = json.loads(json_element.text)
                 except Exception as e:
                     raise RuntimeError(f"Error parsing JSON response for {user['hallTicketNo']} with LeetCode handle {gfg_handle}: {e}")
                 
@@ -102,7 +105,7 @@ def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
 
                 users.at[index, 'geeksforgeeksPracticeRating'] = gfg_rating
                 
-                print(f"Found practice rating for {user['handle']} with GFG handle {gfg_handle}: {gfg_rating}")
+                print(f"Found practice rating for {user['hallTicketNo']} with GFG handle {gfg_handle}: {gfg_rating}")
 
                 counter += 1
             except (NoSuchElementException, ValueError) as e:
