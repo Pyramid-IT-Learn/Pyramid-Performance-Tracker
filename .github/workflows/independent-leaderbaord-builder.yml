@@ -16,7 +16,6 @@ env:
 
 jobs:
   build:
-      needs: [codechef, codeforces, geeksforgeeks, hackerrank, leetcode]
       runs-on: ubuntu-latest
       steps:
         - name: Checkout repository
