@@ -42,13 +42,14 @@ def scrape_codeforces(users: pd.DataFrame) -> pd.DataFrame:
     temp_handles = set()
     while handles:
         temp_handles.add(handles.pop())
-        if len(temp_handles) == 300:
+        if len(temp_handles) == 200:
             batches.append(temp_handles)
             temp_handles = set()
     if temp_handles:
         batches.append(temp_handles)
 
     for index, batch in enumerate(batches):
+        time.sleep(10)
         current_batch_message = f"""
         =================================
         Processing batch {index + 1} of {len(batches)}
