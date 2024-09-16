@@ -1,5 +1,6 @@
 # scripts/geeksforgeeks_scraper.py
 
+import json
 import requests
 import pandas as pd
 from selenium import webdriver
@@ -51,9 +52,6 @@ def scrape_geeksforgeeks_weekly_contest(users: pd.DataFrame) -> pd.DataFrame:
 
     return users
 
-"""
-# Scrape GeeksforGeeks practice ratings: The long and tedious process is done here. #
-
 def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
     # Create geeksforgeeksPracticeRating column
     users['geeksforgeeksPracticeRating'] = 0
@@ -81,51 +79,27 @@ def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
         driver.quit()
         return users
 
-    # Overall Practice score scraping
-    for j in range(1, 2):  # Just a single page as per Java example
-        try:
-            url = f"{GFG_PRACTICE_URL}{j}"
-            print(f"Page: {j}")
-            
-            # Check if URL exists
-            response = requests.get(url)
-            if response.status_code in [404, 400]:
-                break
-            
-            json_response = response.json()
-            found_zero = False
-
-            # Access parsed data and update user ratings
-            for gfg_user in json_response['results']:
-                gfg_handle = gfg_user['handle']
-                user_row = users[users['geeksforgeeksUsername'] == gfg_handle]
-                if not user_row.empty:
-                    user_index = user_row.index[0]
-                    users.at[user_index, 'geeksforgeeksPracticeRating'] = gfg_user.get('coding_score', 0)
-                    print(f"Found user {gfg_handle} with rating {gfg_user.get('coding_score', 0)}")
-
-                    counter += 1
-                
-                if gfg_user.get('coding_score', 0) == 0:
-                    found_zero = True
-            
-            if found_zero:
-                break
-            
-        except Exception as e:
-            print(f"Error fetching GFG Practice rating: {e}")
-    
     # Scrape individual user profiles if practice rating is not available
     for index, user in users.iterrows():
         if pd.isna(user['geeksforgeeksPracticeRating']):
             gfg_handle = user['geeksforgeeksUsername']
             print(f"Practice rating not found for {user['hallTicketNo']} with GFG handle {gfg_handle}. Fetching from profile...")
-            driver.get(f"{GEEKSFORGEEKS_URL}{gfg_handle}")
-            time.sleep(2)
+            driver.get(f"{GFG_API_URL}{gfg_handle}")
+            time.sleep(0.1)
             
             try:
-                score_card_value = driver.find_element(By.XPATH, "//span[contains(text(), 'Overall Coding Score')]/following-sibling::br/following-sibling::span")
-                gfg_rating = int(score_card_value.text)
+                # Parse JSON response
+                try:
+                    json_content = driver.find_element(By.TAG_NAME, "pre").text
+                    json_content = json.loads(json_content)
+                except Exception as e:
+                    raise RuntimeError(f"Error parsing JSON response for {user['hallTicketNo']} with LeetCode handle {gfg_handle}: {e}")
+                
+                gfg_rating = json_content['data']['score']
+
+                if gfg_rating is None:
+                    gfg_rating = 0
+
                 users.at[index, 'geeksforgeeksPracticeRating'] = gfg_rating
                 
                 print(f"Found practice rating for {user['handle']} with GFG handle {gfg_handle}: {gfg_rating}")
@@ -140,38 +114,8 @@ def scrape_geeksforgeeks_practice(users: pd.DataFrame) -> pd.DataFrame:
     
     return users
 
-"""
-
-def scrape_geeksforgeeks_practice_api(users: pd.DataFrame) -> pd.DataFrame:
-    # Create geeksforgeeksPracticeRating column
-    users['geeksforgeeksPracticeRating'] = 0
-    print("GFG practice scraping in progress...")
-
-    for index, user in users.iterrows():
-        gfg_handle = user['geeksforgeeksUsername']
-        gfg_rating = 0
-
-        try:
-            response = requests.get(f"{GEEKSFORGEEKS_URL}{gfg_handle}")
-            if response.status_code == 200:
-                json_response = response.json()
-                if json_response.get('message') == 'User not found!':
-                    continue
-                if json_response.get('data', {}).get('score') is not None:
-                    gfg_rating = json_response['data']['score']
-                else:
-                    gfg_rating = 0
-                users.at[index, 'geeksforgeeksPracticeRating'] = gfg_rating
-            print(f"Found practice rating for {index+1}/{len(users)} {user['hallTicketNo']} with GFG handle {gfg_handle}: {gfg_rating}")
-        except Exception as e:
-            print(f"Error fetching practice rating for {gfg_handle}: {e}")
-
-    print("GFG practice scraping completed.")
-
-    return users
-
 def scrape_geeksforgeeks(users: pd.DataFrame) -> pd.DataFrame:
-    users = scrape_geeksforgeeks_practice_api(users)  
+    users = scrape_geeksforgeeks_practice(users)  
     users = scrape_geeksforgeeks_weekly_contest(users)
 
     print("GFG scraping completed.")
