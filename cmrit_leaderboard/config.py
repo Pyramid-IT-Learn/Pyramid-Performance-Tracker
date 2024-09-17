@@ -10,9 +10,9 @@ GFG_PASSWORD = os.getenv("GFG_PASSWORD")
 CODECHEF_CLIENT_ID = os.getenv("CODECHEF_CLIENT_ID")
 CODECHEF_CLIENT_SECRET = os.getenv("CODECHEF_CLIENT_SECRET")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
-MONGODB_URI = f'mongodb+srv://techtribe:{DB_PASSWORD}@cmrit-2026-leaderboard.0gvol.mongodb.net/?retryWrites=true&w=majority&appName=CMRIT-2026-LEADERBOARD'
-DB_NAME = 'CMRIT-2026-LEADERBOARD'
-USERS_COLLECTION = 'USERS'
+MONGODB_URI = f'mongodb+srv://root:{DB_PASSWORD}@cmrit-leaderboards.0gvol.mongodb.net/?retryWrites=true&w=majority&appName=CMRIT-LEADERBOARDS'
+DB_NAME = 'CMRIT-LEADERBOARDS' # This can remain unchanged
+USERS_COLLECTION = 'CMRIT-2026-LEADERBOARD' # Name of the collection in MongoDB, change for different Batches
 
 # Debugging
 DEBUG = True
