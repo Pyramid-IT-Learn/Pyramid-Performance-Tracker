@@ -1,13 +1,12 @@
-name: Manual Verify & Upload Users
+name: Manual Scrape & Build Leaderboard
 
 on:
-
   workflow_dispatch:
     inputs:
       job:
-        description: 'Choose which job to run'
-        required: true
-        default: 'all'
+        description: 'Select the job to run'
+        required: false
+        default: 'all'  # Default to 'build' if no input is provided
         type: choice
         options:
           - all
@@ -16,6 +15,7 @@ on:
           - geeksforgeeks
           - hackerrank
           - leetcode
+
 env:
   GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
   GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
@@ -28,8 +28,9 @@ env:
   CODEFORCES_SECRET: ${{ secrets.CODEFORCES_SECRET }}
 
 jobs:
+
   codechef:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codechef' || github.event == 'schedule' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codechef' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -47,20 +48,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Verify Users Codechef
+      - name: Scrape Codechef
         run: |
-          python main.py --verify codechef
-
-      - name: Archive Codechef Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: codechef-report
-          path: reports/codechef_handles.txt
-          compression-level: 9
-          retention-days: 5
+          python main.py --scrape codechef
 
   codeforces:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codeforces' || github.event == 'schedule' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codeforces' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -78,20 +71,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Verify Users Codeforces
+      - name: Scrape Codeforces
         run: |
-          python main.py --verify codeforces
-
-      - name: Archive Codeforces Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: codeforces-report
-          path: reports/codeforces_handles.txt
-          compression-level: 9
-          retention-days: 5
+          python main.py --scrape codeforces
 
   geeksforgeeks:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'geeksforgeeks' || github.event == 'schedule' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'geeksforgeeks' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -103,26 +88,23 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
+
+      - name: Install Gecko Driver
+        run: |
+          chmod +x ./scripts/gecko.sh
+          ./scripts/gecko.sh
       
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Verify Users GeeksforGeeks
+      - name: Scrape GeeksforGeeks
         run: |
-          python main.py --verify geeksforgeeks
-
-      - name: Archive GeeksforGeeks Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: geeksforgeeks-report
-          path: reports/geeksforgeeks_handles.txt
-          compression-level: 9
-          retention-days: 5
+          python main.py --scrape geeksforgeeks
 
   hackerrank:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'hackerrank' || github.event == 'schedule' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'hackerrank' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -140,20 +122,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Verify Users HackerRank
+      - name: Scrape HackerRank
         run: |
-          python main.py --verify hackerrank
-
-      - name: Archive HackerRank Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: hackerrank-report
-          path: reports/hackerrank_handles.txt
-          compression-level: 9
-          retention-days: 5
+          python main.py --scrape hackerrank
 
   leetcode:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'leetcode' || github.event == 'schedule' }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'leetcode' }}
     runs-on: windows-latest
     steps:
       - uses: browser-actions/setup-chrome@v1
@@ -174,19 +148,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Verify Users LeetCode
+      - name: Scrape LeetCode
         run: |
-          python main.py --verify leetcode
+          python main.py --scrape leetcode
 
-      - name: Archive LeetCode Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: leetcode-report
-          path: reports/leetcode_handles.txt
-          compression-level: 9
-          retention-days: 5
-
-  upload-to-db:
+  build:
     needs: [codechef, codeforces, geeksforgeeks, hackerrank, leetcode]
     runs-on: ubuntu-latest
     steps:
@@ -194,55 +160,31 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           ref: ${{ github.ref }}
-
+      
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-
-      - name: Download Reports for Codechef
-        uses: actions/download-artifact@v4
-        with:
-          name: codechef-report
-
-      - name: Download Reports for Codeforces
-        uses: actions/download-artifact@v4
-        with:
-          name: codeforces-report
-
-      - name: Download Reports for GeeksforGeeks
-        uses: actions/download-artifact@v4
-        with:
-          name: geeksforgeeks-report
-
-      - name: Download Reports for HackerRank
-        uses: actions/download-artifact@v4
-        with:
-          name: hackerrank-report
-
-      - name: Download Reports for LeetCode
-        uses: actions/download-artifact@v4
-        with:
-          name: leetcode-report
-
-      - name: Print current directory structure
-        run: |
-          tree .
-
-      - name: Move all reports to one directory
-        run: |
-          mkdir reports
-          mv codechef*.txt codeforces*.txt geeksforgeeks*.txt hackerrank*.txt leetcode*.txt reports/
-
-      - name: Print current directory structure after moving
-        run: |
-          tree .
-
+      
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Upload Reports to Database
+      
+      - name: Build Leaderboard
         run: |
-          python main.py --upload
+          python main.py --build
+      
+      - name: Get leaderboard report file path
+        id: get_file_path
+        run: |
+          LEADERBOARD_REPORT_FILE=$(python -c "from cmrit_leaderboard.config import LEADERBOARD_REPORT_FILE; print(LEADERBOARD_REPORT_FILE)")
+          echo "LEADERBOARD_REPORT_FILE=${LEADERBOARD_REPORT_FILE}" >> $GITHUB_ENV
+
+      - name: Archive Leaderboard
+        uses: actions/upload-artifact@v4
+        with:
+          name: leaderboard
+          path: ${{ env.LEADERBOARD_REPORT_FILE }}
+          compression-level: 9
+          retention-days: 5

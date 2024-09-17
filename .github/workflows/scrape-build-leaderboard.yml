@@ -1,25 +1,11 @@
-name: Scrape & Build Leaderboard
+name: Scheduled Scrape & Build Leaderboard
 
 on:
   workflow_run:
     workflows:
-      - Verify & Upload Users
+      - Manual Verify & Upload Users
     types:
       - completed
-  workflow_dispatch:
-    inputs:
-      job:
-        description: 'Select the job to run'
-        required: false
-        default: 'all'  # Default to 'build' if no input is provided
-        type: choice
-        options:
-          - all
-          - codechef
-          - codeforces
-          - geeksforgeeks
-          - hackerrank
-          - leetcode
   schedule:
     - cron: '00 20 * * 1,5'
   pull_request:
@@ -39,7 +25,6 @@ env:
 jobs:
 
   codechef:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codechef' || github.event == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -62,7 +47,6 @@ jobs:
           python main.py --scrape codechef
 
   codeforces:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codeforces' || github.event == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -85,7 +69,6 @@ jobs:
           python main.py --scrape codeforces
 
   geeksforgeeks:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'geeksforgeeks' || github.event == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -113,7 +96,6 @@ jobs:
           python main.py --scrape geeksforgeeks
 
   hackerrank:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'hackerrank' || github.event == 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -136,7 +118,6 @@ jobs:
           python main.py --scrape hackerrank
 
   leetcode:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'leetcode' || github.event == 'schedule' }}
     runs-on: windows-latest
     steps:
       - uses: browser-actions/setup-chrome@v1
