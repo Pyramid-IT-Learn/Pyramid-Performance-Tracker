@@ -69,6 +69,8 @@ def process_codeforces(participants):
         while True:
             response = check_codeforces_users(batch)
 
+            time.sleep(10)
+
             if response["status"] == "OK":
                 # Add all valid handles to final_valid_handles
                 final_valid_handles = final_valid_handles.union(batch)

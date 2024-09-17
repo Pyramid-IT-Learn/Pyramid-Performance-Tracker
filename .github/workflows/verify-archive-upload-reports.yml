@@ -1,6 +1,7 @@
 name: Verify & Upload Users
 
 on:
+
   workflow_dispatch:
     inputs:
       job:
@@ -15,9 +16,6 @@ on:
           - geeksforgeeks
           - hackerrank
           - leetcode
-  schedule:
-    - cron: '58 18 * * 1,5'
-
 env:
   GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
   GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
