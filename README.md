@@ -24,8 +24,8 @@ Here’s the updated Table of Contents to match the content of your README:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/CMRITLeaderboard.git
-   cd CMRITLeaderboard
+   git clone https://github.com/dog-broad/cmrit_leaderboard.git
+   cd cmrit_leaderboard
    ```
 
 2. **Create a Virtual Environment**:
