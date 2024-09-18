@@ -124,8 +124,9 @@ The CMRIT Leaderboard project uses GitHub Actions to automate key tasks:
 - **Trigger**: Manually select platforms.
 - **Purpose**: Verifies user handles and uploads the data to the database.
 
-### 4. **Leaderboard Builder**
-- **Purpose**: To generate the leaderboard report of the current content in the database.
+### 4. **Scheduled Leaderboard Scraper**
+- **Trigger**: Scheduled. (01:30 AM IST on Tuesday and Saturday)
+- **Purpose**: To generate the data for users in the database continuously.
 
 To trigger workflows, go to the GitHub Actions tab in your repository and select the desired workflow.
 
