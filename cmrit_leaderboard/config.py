@@ -80,7 +80,8 @@ HACKERRANK_CONTEST_URLS = [
     "https://www.hackerrank.com/cmrit-2y-2026",
     "https://www.hackerrank.com/cmrit-may-2024",
     "https://www.hackerrank.com/cmrit-june-2024",
-    "https://www.hackerrank.com/cmrit-august-2024"
+    "https://www.hackerrank.com/cmrit-august-2024",
+    "https://www.hackerrank.com/cmrit-september-2024"
 ]
 
 
