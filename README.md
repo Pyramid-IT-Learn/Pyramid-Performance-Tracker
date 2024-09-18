@@ -12,13 +12,13 @@ Here’s the updated Table of Contents to match the content of your README:
 
 ## 📋 Table of Contents
 
-- [Installation](#installation)
-- [Environment Setup](#environment-setup)
-- [Configuration Setup](#configuration-setup)
-- [Usage](#usage)
-- [Viewing Leaderboards](#viewing-leaderboards)
-- [Workflows](#workflows)
-- [Credits](#credits)
+- [Installation](#-installation)
+- [Environment Setup](#-environment-setup)
+- [Configuration Setup](#-database-configuration)
+- [Usage](#-usage)
+- [Viewing Leaderboards](#-viewing-leaderboards)
+- [Workflows](#-workflows)
+- [Credits](#-credits)
 
 ## 💻 Installation
 
