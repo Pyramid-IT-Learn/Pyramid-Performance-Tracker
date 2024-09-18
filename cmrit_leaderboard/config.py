@@ -10,8 +10,8 @@ GFG_PASSWORD = os.getenv("GFG_PASSWORD")
 CODECHEF_CLIENT_ID = os.getenv("CODECHEF_CLIENT_ID")
 CODECHEF_CLIENT_SECRET = os.getenv("CODECHEF_CLIENT_SECRET")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
-MONGODB_URI = f'mongodb+srv://root:{DB_PASSWORD}@cmrit-leaderboards.0gvol.mongodb.net/?retryWrites=true&w=majority&appName=CMRIT-LEADERBOARDS'
-DB_NAME = 'CMRIT-LEADERBOARDS' # This can remain unchanged
+MONGODB_URI = f'mongodb://myUserAdmin:{DB_PASSWORD}@103.172.179.23:27017'
+DB_NAME = 'CMRIT' # This can remain unchanged, only change for a different College
 USERS_COLLECTION = 'CMRIT-2026-LEADERBOARD' # Name of the collection in MongoDB, change for different Batches
 
 # Debugging
@@ -91,6 +91,6 @@ CHROME_DRIVER_VERSION = 128
 MAX_REQUESTS_PER_SECOND = 2
 
 # Rate limiter configuration
-MAX_CALLS_PER_MINUTE = 30
+MAX_CALLS_PER_MINUTE = 60
 SECONDS_PER_MINUTE = 300
 CALL_INTERVAL = SECONDS_PER_MINUTE / MAX_CALLS_PER_MINUTE

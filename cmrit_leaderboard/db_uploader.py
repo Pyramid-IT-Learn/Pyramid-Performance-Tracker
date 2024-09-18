@@ -54,16 +54,15 @@ def upload_to_db():
         # Create a dictionary of platform-specific details
         platform_details = {
             'codechefUsername': codechefusername,
-            'codechefStatus': bool(codechefstatus),
+            'codechefStatus': bool(codechefstatus.any()) if isinstance(codechefstatus, pd.Series) else bool(codechefstatus),
             'codeforcesUsername': codeforcesusername,
-            'codeforcesStatus': bool(codeforcesstatus),
+            'codeforcesStatus': bool(codeforcesstatus.any()) if isinstance(codeforcesstatus, pd.Series) else bool(codeforcesstatus),
             'geeksforgeeksUsername': geeksforgeeksusername,
-            'geeksforgeeksStatus': bool(geeksforgeeksstatus),
+            'geeksforgeeksStatus': bool(geeksforgeeksstatus.any()) if isinstance(geeksforgeeksstatus, pd.Series) else bool(geeksforgeeksstatus),
             'hackerrankUsername': hackerrankusername,
-            'hackerrankStatus': bool(hackerrankstatus),
+            'hackerrankStatus': bool(hackerrankstatus.any()) if isinstance(hackerrankstatus, pd.Series) else bool(hackerrankstatus),
             'leetcodeUsername': leetcodeusername,
-            'leetcodeStatus': bool(leetcodestatus)
+            'leetcodeStatus': bool(leetcodestatus.any()) if isinstance(leetcodestatus, pd.Series) else bool(leetcodestatus)
         }
-
         # Update the user in the database
         db.upsert_user(hallticketno, platform_details)

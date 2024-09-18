@@ -18,7 +18,7 @@ def fetch_codechef_access_token():
 
     return access_token
 
-def fetch_codechef_score(username, access_token):
+def fetch_codechef_score(username, access_token, depth=0):
     try:
         response = requests.get(f"{CODECHEF_API_URL}/users/{username}",
                                    headers={f"Authorization": f"Bearer {access_token}"},
@@ -29,7 +29,12 @@ def fetch_codechef_score(username, access_token):
             return response.json()["result"]["data"]["content"]["ratings"]["allContest"]
         else:
             print(f"Error: {response.status_code} - {response.text}")
-            return None
+            print("Trying again... Attempt: ", depth)
+            if "Unauthorized" in response.text and depth < 100:
+                return fetch_codechef_score(username, access_token, depth + 1)
+            else:
+                print("Too many recursive calls, exiting")
+                exit(1)
     except KeyError:
         print("Invalid JSON response from Codechef API")
         print("--" * 30)
