@@ -24,6 +24,7 @@ def check_codeforces_users(handles):
         response = requests.get(url)
         json_response = response.json()
         codeforces_logger.debug(f"Response from Codeforces API: {json_response}")
+        time.sleep(10)
         return json_response
     except json.decoder.JSONDecodeError:
         print("Invalid JSON response from Codeforces API")
@@ -56,6 +57,7 @@ def process_codeforces(participants):
         batches.append(temp_handles)
 
     for index, batch in enumerate(batches):
+        time.sleep(5)
         current_batch_message = f"""
         =================================
         Processing batch {index + 1} of {len(batches)}
@@ -93,7 +95,6 @@ def process_codeforces(participants):
                 codeforces_logger.error(f"API Error: {response.get('comment', 'Unknown error')}")
                 break
         
-        time.sleep(10)
 
     # Write the report to a file
     with open(CODEFORCES_FILE, 'w') as f:
