@@ -22,6 +22,7 @@ def fetch_codeforces_scores(handles):
     try:
         response = requests.get(url)
         json_response = response.json()
+        time.sleep(10)
         return json_response
     except requests.RequestException as e:
         print(f"Error fetching Codeforces data: {e}")
@@ -49,7 +50,7 @@ def scrape_codeforces(users: pd.DataFrame) -> pd.DataFrame:
         batches.append(temp_handles)
 
     for index, batch in enumerate(batches):
-        time.sleep(10)
+        time.sleep(5)
         current_batch_message = f"""
         =================================
         Processing batch {index + 1} of {len(batches)}
