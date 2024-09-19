@@ -116,6 +116,15 @@ def scrape_platform(platform):
 
         users.replace({' ': ''}, regex=True, inplace=True)
 
+        # Remove all columns that don't start with platform name, except hallTicketNo, TotalRating, Percentile
+        users = users[users.columns[users.columns.str.startswith(platform) | users.columns.isin(['hallTicketNo', 'TotalRating', 'Percentile'])]]
+
+        # Print columns
+        print('--' * 30)
+        print("The columns being uploaded are:")
+        print(users.columns)
+        print('--' * 30)
+
         # Update the database with the updated users
         db.upload_to_db_with_df(users)
 
