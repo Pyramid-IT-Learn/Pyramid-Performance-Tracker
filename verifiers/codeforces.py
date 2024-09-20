@@ -24,7 +24,7 @@ def check_codeforces_users(handles):
         response = requests.get(url)
         json_response = response.json()
         codeforces_logger.debug(f"Response from Codeforces API: {json_response}")
-        time.sleep(10)
+        
         return json_response
     except json.decoder.JSONDecodeError:
         print("Invalid JSON response from Codeforces API")
@@ -49,14 +49,13 @@ def process_codeforces(participants):
     temp_handles = set()
     while handles:
         temp_handles.add(handles.pop())
-        if len(temp_handles) == 300:
+        if len(temp_handles) == 500:
             batches.append(temp_handles)
             temp_handles = set()
     if temp_handles:
         batches.append(temp_handles)
 
     for index, batch in enumerate(batches):
-        time.sleep(5)
         current_batch_message = f"""
         =================================
         Processing batch {index + 1} of {len(batches)}
@@ -68,9 +67,7 @@ def process_codeforces(participants):
         codeforces_logger.debug(f"Processing batch {index + 1} of {len(batches)}")
 
         while True:
-            response = check_codeforces_users(batch)
-
-            time.sleep(10)
+            response = check_codeforces_users(batch)            
 
             if response["status"] == "OK":
                 # Add all valid handles to final_valid_handles
