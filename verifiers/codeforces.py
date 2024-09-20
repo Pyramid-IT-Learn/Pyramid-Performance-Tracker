@@ -29,7 +29,6 @@ def check_codeforces_users(handles):
     except json.decoder.JSONDecodeError:
         print("Invalid JSON response from Codeforces API")
         print(url)
-        print(response.text)
         codeforces_logger.error(f"Invalid JSON response from Codeforces API: {response.text}")
         raise Exception("Invalid JSON response from Codeforces API")
     except requests.RequestException as e:
