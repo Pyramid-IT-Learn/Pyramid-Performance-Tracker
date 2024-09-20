@@ -2,6 +2,9 @@
 
 Welcome to the **CMRIT Leaderboard** project! This application tracks and displays competitive programming performance across various platforms for students of CMRIT.
 
+[![Manual Verify & Upload Users](https://github.com/dog-broad/cmrit_leaderboard/actions/workflows/verify-archive-upload-reports.yml/badge.svg)](https://github.com/dog-broad/cmrit_leaderboard/actions/workflows/verify-archive-upload-reports.yml)
+[![Scheduled Scrape & Build Leaderboard](https://github.com/dog-broad/cmrit_leaderboard/actions/workflows/scrape-build-leaderboard.yml/badge.svg)](https://github.com/dog-broad/cmrit_leaderboard/actions/workflows/scrape-build-leaderboard.yml)
+
 ## 🚀 Features
 
 - Scrapes data from multiple platforms: CodeChef, Codeforces, GeeksforGeeks, HackerRank, and LeetCode.
