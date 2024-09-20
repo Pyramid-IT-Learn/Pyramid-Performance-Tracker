@@ -43,7 +43,7 @@ def scrape_codeforces(users: pd.DataFrame) -> pd.DataFrame:
     temp_handles = set()
     while handles:
         temp_handles.add(handles.pop())
-        if len(temp_handles) == 200:
+        if len(temp_handles) == 400:
             batches.append(temp_handles)
             temp_handles = set()
     if temp_handles:
