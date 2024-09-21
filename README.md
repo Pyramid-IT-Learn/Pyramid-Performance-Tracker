@@ -1,17 +1,15 @@
-# CMRIT Leaderboard 🏆
+# Pyramid Performance Tracker 🏆
 
-Welcome to the **CMRIT Leaderboard** project! This application tracks and displays competitive programming performance across various platforms for students of CMRIT.
+Welcome to the **Pyramid Performance Tracker** project! This application tracks and displays competitive programming performance across multiple platforms for students from various colleges.
 
-[![Manual Verify & Upload Users](https://github.com/dog-broad/cmrit_leaderboard/actions/workflows/verify-archive-upload-reports.yml/badge.svg)](https://github.com/dog-broad/cmrit_leaderboard/actions/workflows/verify-archive-upload-reports.yml)
-[![Scheduled Scrape & Build Leaderboard](https://github.com/dog-broad/cmrit_leaderboard/actions/workflows/scrape-build-leaderboard.yml/badge.svg)](https://github.com/dog-broad/cmrit_leaderboard/actions/workflows/scrape-build-leaderboard.yml)
+[![Manual Verify & Upload Users](https://github.com/Pyramid-IT-Learn/Pyramid-Performance-Tracker/actions/workflows/verify-archive-upload-reports.yml/badge.svg)](https://github.com/Pyramid-IT-Learn/Pyramid-Performance-Tracker/actions/workflows/verify-archive-upload-reports.yml)
+[![Scheduled Scrape & Build Leaderboard](https://github.com/Pyramid-IT-Learn/Pyramid-Performance-Tracker/actions/workflows/scrape-build-leaderboard.yml/badge.svg)](https://github.com/Pyramid-IT-Learn/Pyramid-Performance-Tracker/actions/workflows/scrape-build-leaderboard.yml)
 
 ## 🚀 Features
 
 - Scrapes data from multiple platforms: CodeChef, Codeforces, GeeksforGeeks, HackerRank, and LeetCode.
 - Generates a comprehensive leaderboard in Excel and CSV formats.
 - Allows real-time updates and viewing of participants’ performance.
-
-Here’s the updated Table of Contents to match the content of your README:
 
 ## 📋 Table of Contents
 
@@ -27,8 +25,8 @@ Here’s the updated Table of Contents to match the content of your README:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/dog-broad/cmrit_leaderboard.git
-   cd cmrit_leaderboard
+   git clone https://github.com/Pyramid-IT-Learn/Pyramid-Performance-Tracker.git
+   cd Pyramid-Performance-Tracker
    ```
 
 2. **Create a Virtual Environment**:
@@ -73,14 +71,14 @@ DB_PASSWORD=your_mongodb_password
 
 - **MongoDB Connection**:
   ```plaintext
-  mongodb://myUserAdmin:<DB_PASSWORD>@103.172.179.23:27017
+  mongodb://myUserAdmin:<DB_PASSWORD>@your_mongodb_host:27017
   ```
-- **DB_NAME**: Keep it as `CMRIT` unless you need to change it for a different college.
-- **USERS_COLLECTION**: Change this name for different batches; currently set to `CMRIT-2026-LEADERBOARD`.
+- **DB_NAME**: Keep it as `Pyramid` or change it as needed for different colleges.
+- **USERS_COLLECTION**: Change this name for different batches; currently set to `Pyramid-2026-LEADERBOARD`.
 
 ## 📈 Usage
 
-To manage the CMRIT Leaderboard, follow these steps:
+To manage the Pyramid Performance Tracker, follow these steps:
 
 1. **Verify Users**: This will download the CSV file specified in the config if it doesn't exist.
    ```bash
@@ -112,7 +110,7 @@ You can view the latest leaderboards and track participant performance at [Pyram
 
 ## 🔄 Workflows
 
-The CMRIT Leaderboard project uses GitHub Actions to automate key tasks:
+The Pyramid Performance Tracker project uses GitHub Actions to automate key tasks:
 
 ### 1. **Leaderboard Builder**
 - **Trigger**: Manually.
