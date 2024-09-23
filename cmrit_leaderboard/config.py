@@ -10,16 +10,52 @@ GFG_PASSWORD = os.getenv("GFG_PASSWORD")
 CODECHEF_CLIENT_ID = os.getenv("CODECHEF_CLIENT_ID")
 CODECHEF_CLIENT_SECRET = os.getenv("CODECHEF_CLIENT_SECRET")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
-MONGODB_URI = f'mongodb://myUserAdmin:{DB_PASSWORD}@103.172.179.23:27017'
-DB_NAME = 'CMRIT' # This can remain unchanged, only change for a different College
-USERS_COLLECTION = 'CMRIT-2026-LEADERBOARD' # Name of the collection in MongoDB, change for different Batches
+MONGODB_URI = f'mongodb+srv://root:oR4udPQSmi0z7sYt@cmrit-leaderboards.0gvol.mongodb.net/'
+DESCRIPTION = 'Pyramid Leaderboard Scraper'
 
 # Debugging
 DEBUG = True
+LIMIT_TEST = True
 
-# Project settings
-DESCRIPTION = 'CMRIT 2026 Leaderboard'
-USERNAME_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1UEPRw2UcWdw4ZpmO4qZ6nOhpCygz_MWqtgvO1ugWf_E/pub?output=csv&gid=0&single=true'
+class Config:
+    DB_NAME = None
+    USERS_COLLECTION = None
+    USERNAME_SHEET_URL = None
+    CSV_FILE_PATH = None
+
+DB_MAPPING = {
+    "1": {
+        "DB_NAME": "CMRIT",
+        "USERS_COLLECTION": "CMRIT-2026-LEADERBOARD",
+        "USERNAME_SHEET_URL": "https://docs.google.com/spreadsheets/d/1UEPRw2UcWdw4ZpmO4qZ6nOhpCygz_MWqtgvO1ugWf_E/pub?output=csv&gid=0&single=true",
+        "CSV_FILE_PATH" : 'data/CMRIT2026Leaderbaord.csv'
+    },
+    "2": {
+        "DB_NAME": "CMRIT",
+        "USERS_COLLECTION": "CMRIT-2027-LEADERBOARD",
+        "USERNAME_SHEET_URL": "https://docs.google.com/spreadsheets/u/2/d/e/2PACX-1vRsneoGOzu7L_Qh5M5fuZNf97fc2kVIum0w_oslizePKgRhR9pJi4EWNv5tPV7TGuvl-F_Q9rgRFBkQ/pub?output=csv&gid=0&single=true",
+        "CSV_FILE_PATH" : 'data/CMRIT2027Leaderbaord.csv'
+    },
+}
+
+# Hackerrank Contest URLs
+# Each key corresponds to a USERS_COLLECTION name from the DB_MAPPING.
+# The values are lists of contest URLs associated with that collection.
+# Ensure that the key matches the USERS_COLLECTION exactly (e.g., "CMRIT-2026-LEADERBOARD").
+# Do not leave trailing slashes in the URLs (e.g., "https://www.hackerrank.com/cmrit26-1-basics" ✅, 
+# "https://www.hackerrank.com/cmrit26-2-lpb/" ❌).
+HACKERRANK_CONTEST_URLS = {
+    "CMRIT-2026-LEADERBOARD": [
+        "https://www.hackerrank.com/cmrit26-1-basics",
+        "https://www.hackerrank.com/cmrit26-2-lpb",
+        "https://www.hackerrank.com/cmrit-2y-2026",
+        "https://www.hackerrank.com/cmrit-may-2024",
+        "https://www.hackerrank.com/cmrit-june-2024",
+        "https://www.hackerrank.com/cmrit-august-2024",
+        "https://www.hackerrank.com/cmrit-september-2024"
+    ],
+    "CMRIT-2027-LEADERBOARD": []  # No contests added yet for 2027
+}
 
 # Scraper URLs
 CODECHEF_URL = 'https://www.codechef.com/users'
@@ -36,21 +72,13 @@ CODECHEF_API_URL = 'https://api.codechef.com/'
 # File paths
 HACKERRANK_URLS_FILE = 'data/hackerrank_urls.txt'
 PARTICIPANT_DETAILS_FILE = 'data/participant_details.csv'
-LEADERBOARD_REPORT_FILE = 'reports/CurrentCMRITLeaderboard2026.xlsx'
-EXCEL_FILE_PATH = 'data/CMRIT2026Leaderbaord.xlsx'
-CSV_FILE_PATH = 'data/CMRIT2026Leaderbaord.csv'
+LEADERBOARD_REPORT_FILE = f'reports/GeneratedReport.xlsx'
 
 GEEKSFORGEEKS_FILE = 'reports/geeksforgeeks_handles.txt'
 CODEFORCES_FILE = 'reports/codeforces_handles.txt'
 LEETCODE_FILE = 'reports/leetcode_handles.txt'
 CODECHEF_FILE = 'reports/codechef_handles.txt'
 HACKERRANK_FILE = 'reports/hackerrank_handles.txt'
-
-GEEKSFORGEEKS_LOG_FILE = 'logs/geeksforgeeks.log'
-CODEFORCES_LOG_FILE = 'logs/codeforces.log'
-LEETCODE_LOG_FILE = 'logs/leetcode.log'
-CODECHEF_LOG_FILE = 'logs/codechef.log'
-HACKERRANK_LOG_FILE = 'logs/hackerrank.log'
 
 # Leetcode Query
 # Try not to modify this
@@ -67,22 +95,6 @@ https://leetcode.com/graphql?query=query
       }
 }
 '''
-
-# Hackerrank Contest URLs
-# Do not leave trailing slashes
-# Meaning no / at the end of the URL
-# Example:
-# "https://www.hackerrank.com/cmrit26-1-basics" ✅
-# "https://www.hackerrank.com/cmrit26-2-lpb/" ❌
-HACKERRANK_CONTEST_URLS = [
-    "https://www.hackerrank.com/cmrit26-1-basics",
-    "https://www.hackerrank.com/cmrit26-2-lpb",
-    "https://www.hackerrank.com/cmrit-2y-2026",
-    "https://www.hackerrank.com/cmrit-may-2024",
-    "https://www.hackerrank.com/cmrit-june-2024",
-    "https://www.hackerrank.com/cmrit-august-2024",
-    "https://www.hackerrank.com/cmrit-september-2024"
-]
 
 
 # Chrome driver version
