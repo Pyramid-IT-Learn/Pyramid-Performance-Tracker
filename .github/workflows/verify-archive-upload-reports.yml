@@ -41,7 +41,7 @@ jobs:
         os:
           - ubuntu-latest
 
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == matrix.job }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == ${{ matrix.job }} }}
 
     steps:
       - name: Checkout repository
@@ -76,7 +76,7 @@ jobs:
         os:
           - ubuntu-latest
 
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == matrix.job }}
+    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == ${{ matrix.job }} }}
 
     needs: verify-and-upload-batch-1  # Ensures this runs after batch1 completes
 
