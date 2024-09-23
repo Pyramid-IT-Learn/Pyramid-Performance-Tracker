@@ -42,7 +42,7 @@ def scrape_geeksforgeeks_weekly_contest(users: pd.DataFrame) -> pd.DataFrame:
             gfg_response_username = str(gfg_user['user_handle']).lower()
 
             if gfg_response_username in geeksforgeeks_user_set:
-                users.loc[users['geeksforgeeksUsername'] == str(gfg_user['user_handle']).lower(), 'geeksforgeeksWeeklyRating'] = gfg_user['user_score']
+                users.loc[users['geeksforgeeksUsername'] == str(gfg_user['user_handle']).lower(), 'geeksforgeeksWeeklyRating'] = int(gfg_user['user_score'])
                 print(f"Found user {gfg_user['user_handle'].lower()} with rating {gfg_user['user_score']}")
             if gfg_user['user_score'] == 0 or gfg_user['user_score'] == None:
                 found_zero = True
