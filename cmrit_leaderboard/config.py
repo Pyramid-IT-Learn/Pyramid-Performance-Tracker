@@ -15,7 +15,7 @@ DESCRIPTION = 'Pyramid Leaderboard Scraper'
 
 # Debugging
 DEBUG = True
-LIMIT_TEST = True
+LIMIT_TEST = False
 
 class Config:
     DB_NAME = None
