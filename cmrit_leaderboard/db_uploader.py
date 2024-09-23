@@ -1,21 +1,37 @@
 import os
 import pandas as pd
 from cmrit_leaderboard.database import Database
-from cmrit_leaderboard.config import CSV_FILE_PATH, CODECHEF_FILE, CODEFORCES_FILE, GEEKSFORGEEKS_FILE, HACKERRANK_FILE, LEETCODE_FILE
+from cmrit_leaderboard.config import Config, CODECHEF_FILE, CODEFORCES_FILE, GEEKSFORGEEKS_FILE, HACKERRANK_FILE, LEETCODE_FILE
+from verifiers.participant import Participant
 
-db = Database()
+def upload_to_db(is_test=False, test_participants: list[Participant] = None):
+    # Moved this line here to avoid pusing to same database multiple times when running for multiple batches
+    db = Database() 
 
-def upload_to_db():
-    # Load CSV file into dataframe
-    df = pd.read_csv(
-        CSV_FILE_PATH, 
-        header=0, 
-        names=['hallticketno', 'geeksforgeeksusername', 'codeforcesusername', 'leetcodeusername', 'codechefusername', 'hackerrankusername'], 
-        converters={
-            c: lambda x: x.lower().replace('@', '') 
-            for c in ['hallticketno', 'geeksforgeeksusername', 'codeforcesusername', 'leetcodeusername', 'codechefusername', 'hackerrankusername']
-        }
-    )
+    if is_test:
+        # Initialize df with columns
+        df = pd.DataFrame(columns=['hallTicketNo', 'geeksforgeeksUsername', 'codeforcesUsername', 'leetcodeUsername', 'codechefUsername', 'hackerrankUsername'])
+        # Load test participants
+        for participant in test_participants:
+            df = df._append({
+                'hallTicketNo': participant.handle,
+                'geeksforgeeksUsername': participant.geeksforgeeks_handle,
+                'codeforcesUsername': participant.codeforces_handle,
+                'leetcodeUsername': participant.leetcode_handle,
+                'codechefUsername': participant.codechef_handle,
+                'hackerrankUsername': participant.hackerrank_handle
+            }, ignore_index=True)
+    else:
+        # Load CSV file into dataframe
+        df = pd.read_csv(
+            Config.CSV_FILE_PATH, 
+            header=0, 
+            names=['hallTicketNo', 'geeksforgeeksUsername', 'codeforcesUsername', 'leetcodeUsername', 'codechefUsername', 'hackerrankUsername'], 
+            converters={
+                c: lambda x: x.lower().replace('@', '') 
+                for c in ['hallTicketNo', 'geeksforgeeksUsername', 'codeforcesUsername', 'leetcodeUsername', 'codechefUsername', 'hackerrankUsername']
+            }
+        )
 
     # Load the reports
     codechef = pd.read_csv(CODECHEF_FILE, names=['hallTicketNo', 'codechefUsername', 'codechefStatus'], sep=',\s*', engine='python')
@@ -35,34 +51,41 @@ def upload_to_db():
 
     # Iterate over each row in the dataframe
     for index, row in df.iterrows():
-        print(f"Processing row {index + 1} of {total_users} with hallticketno {row['hallticketno']}...")
+        print(f"Processing row {index + 1} of {total_users} with hallticketno {row['hallTicketNo']}...")
 
-        hallticketno = row['hallticketno']
-        geeksforgeeksusername = row['geeksforgeeksusername']
-        codeforcesusername = row['codeforcesusername']
-        leetcodeusername = row['leetcodeusername']
-        codechefusername = row['codechefusername']
-        hackerrankusername = row['hackerrankusername']
+        hallticketno = row['hallTicketNo']
+        geeksforgeeksusername = row['geeksforgeeksUsername']
+        codeforcesusername = row['codeforcesUsername']
+        leetcodeusername = row['leetcodeUsername']
+        codechefusername = row['codechefUsername']
+        hackerrankusername = row['hackerrankUsername']
+
+        def get_status(hallticketno, df, status_column):
+            if hallticketno in df.index:
+                status = df.at[hallticketno, status_column]
+                return bool(status) if pd.notnull(status) else None
+            return None
 
         # Get the status of the user from the reports
-        codechefstatus = codechef.loc[hallticketno, 'codechefStatus'] if hallticketno in codechef.index else 'N/A'
-        codeforcesstatus = codeforces.loc[hallticketno, 'codeforcesStatus'] if hallticketno in codeforces.index else 'N/A'
-        geeksforgeeksstatus = geeksforgeeks.loc[hallticketno, 'geeksforgeeksStatus'] if hallticketno in geeksforgeeks.index else 'N/A'
-        hackerrankstatus = hackerrank.loc[hallticketno, 'hackerrankStatus'] if hallticketno in hackerrank.index else 'N/A'
-        leetcodestatus = leetcode.loc[hallticketno, 'leetcodeStatus'] if hallticketno in leetcode.index else 'N/A'
+        codechefstatus = get_status(hallticketno, codechef, 'codechefStatus')
+        codeforcesstatus = get_status(hallticketno, codeforces, 'codeforcesStatus')
+        geeksforgeeksstatus = get_status(hallticketno, geeksforgeeks, 'geeksforgeeksStatus')
+        hackerrankstatus = get_status(hallticketno, hackerrank, 'hackerrankStatus')
+        leetcodestatus = get_status(hallticketno, leetcode, 'leetcodeStatus')
 
         # Create a dictionary of platform-specific details
         platform_details = {
             'codechefUsername': codechefusername,
-            'codechefStatus': bool(codechefstatus.any()) if isinstance(codechefstatus, pd.Series) else bool(codechefstatus),
+            'codechefStatus': codechefstatus,
             'codeforcesUsername': codeforcesusername,
-            'codeforcesStatus': bool(codeforcesstatus.any()) if isinstance(codeforcesstatus, pd.Series) else bool(codeforcesstatus),
+            'codeforcesStatus': codeforcesstatus,
             'geeksforgeeksUsername': geeksforgeeksusername,
-            'geeksforgeeksStatus': bool(geeksforgeeksstatus.any()) if isinstance(geeksforgeeksstatus, pd.Series) else bool(geeksforgeeksstatus),
+            'geeksforgeeksStatus': geeksforgeeksstatus,
             'hackerrankUsername': hackerrankusername,
-            'hackerrankStatus': bool(hackerrankstatus.any()) if isinstance(hackerrankstatus, pd.Series) else bool(hackerrankstatus),
+            'hackerrankStatus': hackerrankstatus,
             'leetcodeUsername': leetcodeusername,
-            'leetcodeStatus': bool(leetcodestatus.any()) if isinstance(leetcodestatus, pd.Series) else bool(leetcodestatus)
+            'leetcodeStatus': leetcodestatus
         }
         # Update the user in the database
         db.upsert_user(hallticketno, platform_details)
+
