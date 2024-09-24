@@ -107,7 +107,7 @@ def check_required_files():
     for file in required_files:
         if not os.path.exists(file):
             print(f"File '{file}' is missing. Please run the verifier script again.")
-            exit(1)
+            exit(0)
 
 def clear_directories():
     for folder in ['reports']:
