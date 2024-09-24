@@ -29,9 +29,10 @@ def fetch_codechef_access_token():
 
 def check_codechef_url(username, access_token):
     try:
-        response = requests.get(f"{CODECHEF_API_URL}/users/{username}",
+        response = requests.get(f"{CODECHEF_API_URL}/users",
                                    headers={f"Authorization": f"Bearer {access_token}"},
-                                   params={"fields": "ratings"},
+                                   params={"fields": "ratings",
+                                           "search": username},
                                    timeout=10)
         
         if response.status_code == 200:
