@@ -63,9 +63,11 @@ def upload_to_db(is_test=False, test_participants: list[Participant] = None):
         def get_status(hallticketno, df, status_column):
             if hallticketno in df.index:
                 status = df.at[hallticketno, status_column]
-                # Check if there are multiple values in the column
-                if isinstance(status, list):
-                    status = status[0]
+                print("--" * 10)
+                print(f'For {hallticketno}, {status_column} = {status}')
+                print(status)
+                print(type(status))
+                print("--" * 10)
                 return bool(status) if pd.notnull(status) else None
             return None
 
