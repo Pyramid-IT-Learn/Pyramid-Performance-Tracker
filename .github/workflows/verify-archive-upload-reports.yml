@@ -64,7 +64,7 @@ jobs:
       - name: Archive Reports
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.job }}-report
+          name: ${{ matrix.job }}-report-1
           path: reports/${{ matrix.job }}_handles.txt
   
   upload-batch-1:
@@ -84,27 +84,27 @@ jobs:
       - name: Download Reports for Codechef
         uses: actions/download-artifact@v4
         with:
-          name: codechef-report
+          name: codechef-report-1
 
       - name: Download Reports for Codeforces
         uses: actions/download-artifact@v4
         with:
-          name: codeforces-report
+          name: codeforces-report-1
 
       - name: Download Reports for GeeksforGeeks
         uses: actions/download-artifact@v4
         with:
-          name: geeksforgeeks-report
+          name: geeksforgeeks-report-1
 
       - name: Download Reports for HackerRank
         uses: actions/download-artifact@v4
         with:
-          name: hackerrank-report
+          name: hackerrank-report-1
 
       - name: Download Reports for LeetCode
         uses: actions/download-artifact@v4
         with:
-          name: leetcode-report
+          name: leetcode-report-1
 
       - name: Move all reports to one directory
         run: |
@@ -157,7 +157,7 @@ jobs:
       - name: Archive Reports
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.job }}-report
+          name: ${{ matrix.job }}-report-2
           path: reports/${{ matrix.job }}_handles.txt
 
   upload-batch-2:
@@ -177,27 +177,27 @@ jobs:
       - name: Download Reports for Codechef
         uses: actions/download-artifact@v4
         with:
-          name: codechef-report
+          name: codechef-report-2
 
       - name: Download Reports for Codeforces
         uses: actions/download-artifact@v4
         with:
-          name: codeforces-report
+          name: codeforces-report-2
 
       - name: Download Reports for GeeksforGeeks
         uses: actions/download-artifact@v4
         with:
-          name: geeksforgeeks-report
+          name: geeksforgeeks-report-2
 
       - name: Download Reports for HackerRank
         uses: actions/download-artifact@v4
         with:
-          name: hackerrank-report
+          name: hackerrank-report-2
 
       - name: Download Reports for LeetCode
         uses: actions/download-artifact@v4
         with:
-          name: leetcode-report
+          name: leetcode-report-2
 
       - name: Move all reports to one directory
         run: |
