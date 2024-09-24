@@ -65,11 +65,19 @@ def upload_to_db(is_test=False, test_participants: list[Participant] = None):
                 status = df.at[hallticketno, status_column]
                 print("--" * 10)
                 print(f'For {hallticketno}, {status_column} = {status}')
+                
+                # Check if status is a Series and get the first value if so
+                if isinstance(status, pd.Series):
+                    print("Is a series")
+                    status = status.iloc[0]
+                
                 print(status)
                 print(type(status))
                 print("--" * 10)
+                
                 return bool(status) if pd.notnull(status) else None
             return None
+
 
         # Get the status of the user from the reports
         codechefstatus = get_status(hallticketno, codechef, 'codechefStatus')
