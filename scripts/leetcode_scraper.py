@@ -24,9 +24,12 @@ def scrape_leetcode(users: pd.DataFrame) -> pd.DataFrame:
     # Rate limit the function to a maximum of 2 requests per second
     limiter = RateLimiter(max_calls=MAX_REQUESTS_PER_SECOND, period=1)
 
-    options = Options()
-    options.add_argument("-headless")
-    driver = webdriver.Firefox(options=options)
+    # Create chrome options
+    options = uc.ChromeOptions()
+    options.add_argument("--auto-open-devtools-for-tabs")
+
+    # Configure undetected-chromedriver to run in headless mode
+    driver = uc.Chrome(version_main=CHROME_DRIVER_VERSION, options=options)
 
     # Login to GitHub
     driver.get("https://github.com/login")
@@ -59,8 +62,6 @@ def scrape_leetcode(users: pd.DataFrame) -> pd.DataFrame:
         encoded_leetcode_handle = urllib.parse.quote(leetcode_handle, safe='')
         url = LEETCODE_QUERY.replace("{<username>}", encoded_leetcode_handle)
         url = url.replace(" ", "%20")
-        # Add view-source: to the URL to view the source of the page
-        url = "view-source:" + url
         try:
             with limiter:
                 driver.get(url)

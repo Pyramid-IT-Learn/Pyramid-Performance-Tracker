@@ -66,8 +66,8 @@ def run_for_batch(batch_key, args):
 
     from cmrit_leaderboard.db_uploader import upload_to_db  # Import here to avoid circular imports
 
+    file_path = Config.CSV_FILE_PATH
     if args.verify:
-        file_path = Config.CSV_FILE_PATH
         sheet_download_if_not_exists(file_path, Config.USERNAME_SHEET_URL)
         participants = load_participants(file_path)
 
