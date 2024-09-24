@@ -64,6 +64,7 @@ def scrape_leetcode(users: pd.DataFrame) -> pd.DataFrame:
         try:
             with limiter:
                 driver.get(url)
+                time.sleep(1)
 
                 # Parse JSON response
                 try:
