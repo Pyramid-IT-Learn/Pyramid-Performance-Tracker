@@ -27,7 +27,11 @@ def fetch_codechef_score(username, access_token, depth=0):
                                    timeout=10)
         
         if response.status_code == 200:
-            return response.json()["result"]["data"]["content"][0]["ratings"]["allContest"]
+            json_data = response.json()
+            for user in json_data["result"]["data"]["content"]:
+                print("Comparing username: " + username + " with username: " + user["username"])
+                if user["username"] == username:
+                    return user["ratings"]["allContest"]
         else:
             print(f"Error: {response.status_code} - {response.text}")
             print("Trying again... Attempt: ", depth)
