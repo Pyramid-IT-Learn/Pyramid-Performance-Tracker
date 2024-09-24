@@ -83,6 +83,9 @@ def run_for_batch(batch_key, args):
             process_leetcode(participants)
 
     if args.upload:
+        # If verify is also requested and args is not all, do not upload
+        if args.verify and args.verify != 'all':
+            return
         sheet_download_if_not_exists(file_path, Config.USERNAME_SHEET_URL)
         check_required_files()
         print("Uploading data to database...")
@@ -107,7 +110,7 @@ def check_required_files():
     for file in required_files:
         if not os.path.exists(file):
             print(f"File '{file}' is missing. Please run the verifier script again.")
-            exit(0)
+            exit(1)
 
 def clear_directories():
     for folder in ['reports']:

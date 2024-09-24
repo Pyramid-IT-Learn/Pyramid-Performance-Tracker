@@ -151,7 +151,7 @@ jobs:
       - name: Verify and Upload
         run: |
           if [[ "${{ github.event.inputs.job }}" == "all" || "${{ matrix.job }}" == "${{ github.event.inputs.job }}" ]]; then
-            python main.py --batch 2 --verify ${{ matrix.job }} --upload
+            python main.py --batch 2 --verify ${{ matrix.job }}
           fi
 
   upload-batch-2:
