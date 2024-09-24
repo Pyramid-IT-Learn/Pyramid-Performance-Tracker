@@ -31,12 +31,12 @@ def check_codechef_url(username, access_token):
     try:
         response = requests.get(f"{CODECHEF_API_URL}/users",
                                    headers={f"Authorization": f"Bearer {access_token}"},
-                                   params={"fields": "ratings",
-                                           "search": username},
+                                   params={"fields": ['fullname'],
+                                           "search": f'{username}'},
                                    timeout=10)
         
         if response.status_code == 200:
-            if response.json()["result"]["data"]["message"] == "user does not exists":
+            if "message" in response.json()["result"]["data"] and (response.json()["result"]["data"]["message"] == "user does not exists" or response.json()["result"]["data"]["message"] == "no user found for this search"):
                 return False
             else:
                 return True
