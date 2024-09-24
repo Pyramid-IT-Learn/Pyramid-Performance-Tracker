@@ -121,6 +121,7 @@ jobs:
           python main.py --batch 1 --upload
 
   verify-batch-2:
+    needs: verify-batch-1
     runs-on: ubuntu-latest
     strategy:
       matrix:
