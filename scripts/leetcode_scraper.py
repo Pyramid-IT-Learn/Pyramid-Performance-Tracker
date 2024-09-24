@@ -59,6 +59,8 @@ def scrape_leetcode(users: pd.DataFrame) -> pd.DataFrame:
         encoded_leetcode_handle = urllib.parse.quote(leetcode_handle, safe='')
         url = LEETCODE_QUERY.replace("{<username>}", encoded_leetcode_handle)
         url = url.replace(" ", "%20")
+        # Add view-source: to the URL to view the source of the page
+        url = "view-source:" + url
         try:
             with limiter:
                 driver.get(url)
