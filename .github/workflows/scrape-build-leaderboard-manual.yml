@@ -56,10 +56,17 @@ jobs:
         job: [codechef, codeforces, geeksforgeeks, hackerrank, leetcode]
     if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == matrix.job }}
     steps:
-      - name: Scrape and Evaluate Batch 1
+      - name: Scrape Batch 1
         run: |
           python main.py --batch 1 --scrape ${{ matrix.job }}
-          python main.py --batch 1 --evaluate ${{ matrix.job }}
+  
+  batch1-evaluate:
+    runs-on: ubuntu-latest
+    needs: setup, batch1
+    steps:
+      - name: Evaluate Batch 1
+        run: |
+          python main.py --batch 1 --evaluate
 
   batch2:
     runs-on: ubuntu-latest
@@ -73,3 +80,11 @@ jobs:
         run: |
           python main.py --batch 2 --scrape ${{ matrix.job }}
           python main.py --batch 2 --evaluate ${{ matrix.job }}
+
+  batch2-evaluate:
+    runs-on: ubuntu-latest
+    needs: setup, batch2
+    steps:
+      - name: Evaluate Batch 2
+        run: |
+          python main.py --batch 2 --evaluate
