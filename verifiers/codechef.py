@@ -36,10 +36,12 @@ def check_codechef_url(username, access_token):
                                    timeout=10)
         
         if response.status_code == 200:
-            if "message" in response.json()["result"]["data"] and (response.json()["result"]["data"]["message"] == "user does not exists" or response.json()["result"]["data"]["message"] == "no user found for this search"):
-                return False
-            else:
-                return True
+            json_data = response.json()
+            for user in json_data["result"]["data"]["content"]:
+                print("Comparing username: " + username + " with username: " + user["username"])
+                if user["username"] == username:
+                    return True
+            return False
         else:
             print(f"Error: {response.status_code} - {response.text}")
             exit(1)
