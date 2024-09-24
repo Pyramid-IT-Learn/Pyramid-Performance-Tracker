@@ -24,12 +24,9 @@ def scrape_leetcode(users: pd.DataFrame) -> pd.DataFrame:
     # Rate limit the function to a maximum of 2 requests per second
     limiter = RateLimiter(max_calls=MAX_REQUESTS_PER_SECOND, period=1)
 
-    # Create chrome options
-    options = uc.ChromeOptions()
-    options.add_argument("--auto-open-devtools-for-tabs")
-
-    # Configure undetected-chromedriver to run in headless mode
-    driver = uc.Chrome(version_main=CHROME_DRIVER_VERSION, options=options)
+    options = Options()
+    options.add_argument("-headless")
+    driver = webdriver.Firefox(options=options)
 
     # Login to GitHub
     driver.get("https://github.com/login")
