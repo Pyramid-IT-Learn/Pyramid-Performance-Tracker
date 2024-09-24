@@ -8,7 +8,13 @@ on:
         required: true
         default: 'all'
         type: choice
-        options: [all, codechef, codeforces, geeksforgeeks, hackerrank, leetcode]
+        options:
+          - all
+          - codechef
+          - codeforces
+          - geeksforgeeks
+          - hackerrank
+          - leetcode
 
 env:
   GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
