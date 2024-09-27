@@ -253,7 +253,7 @@ jobs:
           name: ${{ matrix.job }}-report-3
           path: reports/${{ matrix.job }}_handles.txt
 
-  upload-batch-2:
+  upload-batch-3:
     runs-on: ubuntu-latest
     needs: verify-batch-3
     steps:
