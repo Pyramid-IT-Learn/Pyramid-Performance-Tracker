@@ -1,4 +1,4 @@
-name: Manual Verify & Upload Users
+name: Manual Verify & Upload Users Per Batch
 
 on:
   workflow_dispatch:
