@@ -26,11 +26,17 @@ class Config:
 DB_MAPPING = {
     "1": {
         "DB_NAME": "CMRIT",
+        "USERS_COLLECTION": "CMRIT-2025-LEADERBOARD",
+        "USERNAME_SHEET_URL": "https://docs.google.com/spreadsheets/d/17ypZiX6LzgmADqSgDmQ3vytIrf1DkEHafIltWaXRlog/pub?output=csv&gid=0&single=true",
+        "CSV_FILE_PATH" : 'data/CMRIT2025Leaderbaord.csv'
+    },
+    "2": {
+        "DB_NAME": "CMRIT",
         "USERS_COLLECTION": "CMRIT-2026-LEADERBOARD",
         "USERNAME_SHEET_URL": "https://docs.google.com/spreadsheets/d/1UEPRw2UcWdw4ZpmO4qZ6nOhpCygz_MWqtgvO1ugWf_E/pub?output=csv&gid=0&single=true",
         "CSV_FILE_PATH" : 'data/CMRIT2026Leaderbaord.csv'
     },
-    "2": {
+    "3": {
         "DB_NAME": "CMRIT",
         "USERS_COLLECTION": "CMRIT-2027-LEADERBOARD",
         "USERNAME_SHEET_URL": "https://docs.google.com/spreadsheets/u/2/d/e/2PACX-1vRsneoGOzu7L_Qh5M5fuZNf97fc2kVIum0w_oslizePKgRhR9pJi4EWNv5tPV7TGuvl-F_Q9rgRFBkQ/pub?output=csv&gid=0&single=true",

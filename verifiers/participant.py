@@ -35,6 +35,12 @@ class Participant:
         leetcode_handle = leetcode_handle.replace('.', '')
         codechef_handle = codechef_handle.replace('.', '')
         hackerrank_handle = hackerrank_handle.replace('.', '')
+        # Remove Spaces from all the handles
+        geeksforgeeks_handle = geeksforgeeks_handle.replace(' ', '')
+        codeforces_handle = codeforces_handle.replace(' ', '')
+        leetcode_handle = leetcode_handle.replace(' ', '')
+        codechef_handle = codechef_handle.replace(' ', '')
+        hackerrank_handle = hackerrank_handle.replace(' ', '')
         self.handle = handle
         self.geeksforgeeks_handle = geeksforgeeks_handle
         self.codeforces_handle = codeforces_handle
