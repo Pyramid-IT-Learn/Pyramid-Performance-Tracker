@@ -51,6 +51,22 @@ DB_MAPPING = {
 # Do not leave trailing slashes in the URLs (e.g., "https://www.hackerrank.com/cmrit26-1-basics" ✅, 
 # "https://www.hackerrank.com/cmrit26-2-lpb/" ❌).
 HACKERRANK_CONTEST_URLS = {
+    "CMRIT-2025-LEADERBOARD": [
+        "https://www.hackerrank.com/cmrit25-1-basics",
+        "https://www.hackerrank.com/cmrit25-4-rbd",
+        "https://www.hackerrank.com/cmrit25-3-iterables",
+        "https://www.hackerrank.com/cmrit25-2-lpb",
+        "https://www.hackerrank.com/cmrit25-5-ds",
+        "https://www.hackerrank.com/1-basics-2025",
+        "https://www.hackerrank.com/2-loops-2025",
+        "https://www.hackerrank.com/3-bitpat-2025",
+        "https://www.hackerrank.com/4-iterables-2025",
+        "https://www.hackerrank.com/5-recursion-2025",
+        "https://www.hackerrank.com/strivers-sde-sheet",
+        "https://www.hackerrank.com/ds-2025",
+        "https://www.hackerrank.com/codevita-2025",
+        "https://www.hackerrank.com/mentor-graphics-2025"
+    ],
     "CMRIT-2026-LEADERBOARD": [
         "https://www.hackerrank.com/cmrit26-1-basics",
         "https://www.hackerrank.com/cmrit26-2-lpb",
