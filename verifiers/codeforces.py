@@ -26,6 +26,15 @@ def check_codeforces_users(handles):
     except json.decoder.JSONDecodeError:
         print("Invalid JSON response from Codeforces API")
         print(url)
+        print(response.text)
+        # Try again, if response is still invalid raise exception
+        time.sleep(5)
+        response = requests.get(url)
+        json_response = response.json()
+
+        if json_response["status"] == "OK":
+            return json_response
+        
         raise Exception("Invalid JSON response from Codeforces API")
     except requests.RequestException as e:
         print(f"Error fetching Codeforces data: {e}")
@@ -37,13 +46,13 @@ def process_codeforces(participants):
 
     final_valid_handles = set()
     final_invalid_handles = set()
-    
+
     # Create a list of sets of handles with max 300 elements in each set by popping elements from the handles
     batches = []
     temp_handles = set()
     while handles:
         temp_handles.add(handles.pop())
-        if len(temp_handles) == 500:
+        if len(temp_handles) == 450:
             batches.append(temp_handles)
             temp_handles = set()
     if temp_handles:
