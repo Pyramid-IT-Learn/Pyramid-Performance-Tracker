@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '00 20 * * 1,5'
   pull_request:
-    branches: [ "main" ]
+    branches: ["multi-batch-support"]
 
 env:
   GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
