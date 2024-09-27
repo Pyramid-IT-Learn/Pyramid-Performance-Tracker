@@ -1,11 +1,6 @@
 name: Scheduled Scrape & Build Leaderboard
 
 on:
-  workflow_run:
-    workflows:
-      - Manual Verify & Upload Users
-    types:
-      - completed
   schedule:
     - cron: '00 20 * * 1,5'
   pull_request:
