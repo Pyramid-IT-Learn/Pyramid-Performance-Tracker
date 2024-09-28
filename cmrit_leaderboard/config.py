@@ -10,7 +10,7 @@ GFG_PASSWORD = os.getenv("GFG_PASSWORD")
 CODECHEF_CLIENT_ID = os.getenv("CODECHEF_CLIENT_ID")
 CODECHEF_CLIENT_SECRET = os.getenv("CODECHEF_CLIENT_SECRET")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
-MONGODB_URI = f'mongodb+srv://root:oR4udPQSmi0z7sYt@cmrit-leaderboards.0gvol.mongodb.net/'
+MONGODB_URI = f'mongodb://myUserAdmin:{DB_PASSWORD}@103.172.179.23:27017/'
 DESCRIPTION = 'Pyramid Leaderboard Scraper'
 
 # Debugging
