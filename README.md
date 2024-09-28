@@ -106,7 +106,7 @@ This will fetch user data and generate reports in the `reports` directory.
 
 ## 🌐 Viewing Leaderboards
 
-You can view the latest leaderboards and track participant performance at [Pyramid Leaderboards](https://dog-broad.github.io/pyramid-leaderboards/).
+You can view the latest leaderboards and track participant performance at [Pyramid Leaderboards](https://pyramid-it-learn.github.io/pyramid-leaderboards/).
 
 ## 🔄 Workflows
 
