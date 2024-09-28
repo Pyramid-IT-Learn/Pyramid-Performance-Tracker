@@ -64,6 +64,7 @@ def scrape_codeforces(users: pd.DataFrame) -> pd.DataFrame:
 
             if response["status"] == "OK":
                 for user in response["result"]:
+                    print("Checking Codeforces URL for participant " + user["handle"])
                     rating = 0
                     try:
                         rating = user["rating"]

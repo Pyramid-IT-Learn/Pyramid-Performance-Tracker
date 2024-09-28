@@ -4,11 +4,15 @@ import os
 import time
 import json
 import urllib.parse
-import undetected_chromedriver as uc
-from ratelimiter import RateLimiter
+from selenium import webdriver
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.common.exceptions import NoSuchElementException
+from ratelimiter import RateLimiter
 from cmrit_leaderboard.config import LEETCODE_QUERY, MAX_REQUESTS_PER_SECOND, CHROME_DRIVER_VERSION, LEETCODE_FILE, GIT_USERNAME, GIT_PASSWORD, DEBUG
-from .utils import setup_logger
 
 def process_leetcode(participants):
     """
@@ -40,12 +44,9 @@ def process_leetcode(participants):
     # Rate limit the function to a maximum of 2 requests per second
     limiter = RateLimiter(max_calls=MAX_REQUESTS_PER_SECOND, period=1)
 
-    # Create chrome options
-    options = uc.ChromeOptions()
-    options.add_argument("--auto-open-devtools-for-tabs")
-
-    # Configure undetected-chromedriver to run in headless mode
-    driver = uc.Chrome(version_main=CHROME_DRIVER_VERSION, options=options)
+    options = Options()
+    options.add_argument("-headless")
+    driver = webdriver.Firefox(options=options)
 
     # Login to GitHub
     driver.get("https://github.com/login")
@@ -78,6 +79,8 @@ def process_leetcode(participants):
         encoded_leetcode_handle = urllib.parse.quote(leetcode_handle, safe='')
         url = LEETCODE_QUERY.replace("{<username>}", encoded_leetcode_handle)
         url = url.replace(" ", "%20")
+        # Add view-source: to the URL to view the source of the page
+        url = "view-source:" + url
         try:
             with limiter:
                 driver.get(url)
@@ -108,3 +111,5 @@ def process_leetcode(participants):
                     raise RuntimeError(f"Error getting content for {handle} with LeetCode handle {leetcode_handle}: {e}")
         except Exception as e:
             raise RuntimeError(f"Error processing LeetCode handle for {handle}: {e}")
+    
+    driver.quit()

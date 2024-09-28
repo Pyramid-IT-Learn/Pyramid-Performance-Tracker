@@ -67,11 +67,10 @@ def run_for_batch(batch_key, args):
     from cmrit_leaderboard.db_uploader import upload_to_db  # Import here to avoid circular imports
 
     file_path = Config.CSV_FILE_PATH
+    sheet_download_if_not_exists(file_path, Config.USERNAME_SHEET_URL)
+    participants = load_participants(file_path)
     
     if args.verify:
-        sheet_download_if_not_exists(file_path, Config.USERNAME_SHEET_URL)
-        participants = load_participants(file_path)
-
         if args.verify == 'codechef' or args.verify == 'all':
             process_codechef(participants)
         if args.verify == 'codeforces' or args.verify == 'all':
@@ -84,6 +83,9 @@ def run_for_batch(batch_key, args):
             process_leetcode(participants)
 
     if args.upload:
+        # If verify is also requested and args is not all, do not upload
+        if args.verify and args.verify != 'all':
+            return
         sheet_download_if_not_exists(file_path, Config.USERNAME_SHEET_URL)
         check_required_files()
         print("Uploading data to database...")

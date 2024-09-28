@@ -3,18 +3,21 @@
 import pandas as pd
 
 from pymongo import MongoClient
-from cmrit_leaderboard.config import MONGODB_URI, DB_NAME, USERS_COLLECTION
+from cmrit_leaderboard.config import Config, MONGODB_URI
 
 class Database:
     def __init__(self):
         self.client = MongoClient(MONGODB_URI)
-        self.db = self.client[DB_NAME]
-        self.users_collection = self.db[USERS_COLLECTION]
+        self.db = self.client[Config.DB_NAME]
+        self.users_collection = self.db[Config.USERS_COLLECTION]
         self.users_collection.create_index(
             [('hallTicketNo', 1)], unique=True
         )
+        print(f"Connected to database: {Config.DB_NAME} - {Config.USERS_COLLECTION}")
 
     def upsert_user(self, hall_ticket_no, data):
+        # Updated at
+        data['updatedAt'] = pd.Timestamp.now()
         self.users_collection.update_one(
             {'hallTicketNo': hall_ticket_no},
             {'$set': data},

@@ -1,13 +1,9 @@
 # verifiers/hackerrank.py
 
-import logging
 import requests
 from bs4 import BeautifulSoup
-from cmrit_leaderboard.config import HACKERRANK_URL, HACKERRANK_FILE, HACKERRANK_LOG_FILE, DEBUG
+from cmrit_leaderboard.config import HACKERRANK_URL, HACKERRANK_FILE, DEBUG
 from time import sleep
-from .utils import setup_logger
-
-hackerrank_logger = setup_logger("hackerrank_logger", HACKERRANK_LOG_FILE, DEBUG)
 
 def check_url_exists(url):
     header = {
@@ -25,27 +21,22 @@ def check_url_exists(url):
 
         # try to find community-content class within the soup, if found then the handle exists
         if soup.find("div", {"class": "community-content"}):
-            hackerrank_logger.debug(f"Handle {url} exists, found the class community-content")
             return True, response.url
 
         # Extract the title of the page
         title = soup.title.string
         
         if "class=\"error-title\"" in str(soup):
-            hackerrank_logger.debug(f"Handle {url} does not exist, found the class error-title")
             return False, response.url
 
         elif "HTTP 404: Page Not Found | HackerRank" in title:
-            hackerrank_logger.debug(f"Handle {url} does not exist, found the title HTTP 404: Page Not Found | HackerRank")
             return False, response.url
 
         elif "class=\"e404-view\"" in str(soup):
-            hackerrank_logger.debug(f"Handle {url} does not exist, found the class e404-view")
             return False, response.url
 
         # if the page contains the class class="page-not-found-container container" in the html, then the handle does not exist
         elif "class=\"page-not-found-container container\"" in str(soup):
-            hackerrank_logger.debug(f"Handle {url} does not exist, found the class page-not-found-container")
             return False, response.url
         
         return True, response.url
@@ -61,11 +52,9 @@ def process_hackerrank(participants):
                 f"{HACKERRANK_URL}profile/{participant.hackerrank_handle}"
             )
             if not url_exists:
-                hackerrank_logger.debug(f"Retrying HackerRank URL check for participant {participant.handle}")
                 url_exists, response_url = check_url_exists(
                     f"{HACKERRANK_URL}profile/{participant.hackerrank_handle}"
                 )
             print(f"{index}/{len(participants)} - Respoded with a URL: {response_url}, URL exists: {url_exists}")
         with open(HACKERRANK_FILE, 'a') as file:
             file.write(f"{participant.handle}, {participant.hackerrank_handle}, {url_exists}\n")
-        hackerrank_logger.debug(f"Data written to file for participant {participant.handle}")

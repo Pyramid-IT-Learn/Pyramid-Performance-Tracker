@@ -1,11 +1,7 @@
 # verifiers/geeksforgeeks.py
 
-import logging
 import requests
-from cmrit_leaderboard.config import GEEKSFORGEEKS_FILE, GEEKSFORGEEKS_LOG_FILE, GFG_API_URL, DEBUG
-from .utils import setup_logger
-
-geeks_for_geeks_logger = setup_logger('geeks_for_geeks_logger', GEEKSFORGEEKS_LOG_FILE, DEBUG)
+from cmrit_leaderboard.config import GEEKSFORGEEKS_FILE, GFG_API_URL, DEBUG
 
 def check_geekforgeeks_url(url):
     header = {
@@ -26,7 +22,6 @@ def check_geekforgeeks_url(url):
             # https://auth.geeksforgeeks.org/?to=https://auth.geeksforgeeks.org/profile.php codechef redirect is
             # found by checking if final url is https://www.codechef.com/ Hackerrank and Leetcode return 404 error if
             # handle does not exist
-            geeks_for_geeks_logger.debug(f"Checking : {response.url}")
             if (response.url == "https://auth.geeksforgeeks.org/?to=https://auth.geeksforgeeks.org/profile.php"):
                 return False, response.url
             else:
@@ -73,20 +68,13 @@ def process_geeksforgeeks(participants):
 
         if participant.geeksforgeeks_handle != '#n/a':
             geeks_for_geeks_url = GFG_API_URL + participant.geeksforgeeks_handle
-            geeks_for_geeks_logger.debug(f"Checking GeeksForGeeks URL for participant {participant.handle}")
 
             # Check if the GeeksForGeeks URL exists
             geeksforgeeks_url_exists = check_geekforgeeks_url_api(geeks_for_geeks_url)
-            geeks_for_geeks_logger.debug(f"GeeksForGeeks URL exists: {geeksforgeeks_url_exists}")
 
         # Write participant data to file
         with open(GEEKSFORGEEKS_FILE, 'a') as file:
             file.write(f"{participant.handle}, {participant.geeksforgeeks_handle}, {geeksforgeeks_url_exists}\n")
-        geeks_for_geeks_logger.debug(
-            f"Data written to file for participant {participant.handle}: {participant.geeksforgeeks_handle},"
-            f" {geeksforgeeks_url_exists}")
-        geeks_for_geeks_logger.debug("---------------------------------------------------")
 
         print(f"{i}/{total}: {participant.handle} with handle {participant.geeksforgeeks_handle} result: {geeksforgeeks_url_exists}")
 
-    geeks_for_geeks_logger.debug("Data written to file for all participants")

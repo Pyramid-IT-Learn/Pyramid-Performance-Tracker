@@ -20,14 +20,13 @@ def fetch_codechef_access_token():
 
 def fetch_codechef_score(username, access_token, depth=0):
     try:
-        response = requests.get(f"{CODECHEF_API_URL}/users",
+        response = requests.get(f"{CODECHEF_API_URL}/users/{username}",
                                    headers={f"Authorization": f"Bearer {access_token}"},
-                                   params={"fields": "ratings",
-                                           "search": username},
+                                   params={"fields": "ratings"},
                                    timeout=10)
         
         if response.status_code == 200:
-            return response.json()["result"]["data"]["content"][0]["ratings"]["allContest"]
+            return response.json()["result"]["data"]["content"]["ratings"]["allContest"]
         else:
             print(f"Error: {response.status_code} - {response.text}")
             print("Trying again... Attempt: ", depth)
@@ -88,8 +87,6 @@ def scrape_codechef(users: pd.DataFrame) -> pd.DataFrame:
 
                 if codechef_score is None:
                     codechef_score = 0
-
-                print(f"CodeChef score: {codechef_score}")
 
         # Update the DataFrame
         users.loc[index, 'codechefRating'] = codechef_score

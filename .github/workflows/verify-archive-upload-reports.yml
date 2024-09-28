@@ -1,7 +1,6 @@
 name: Manual Verify & Upload Users
 
 on:
-
   workflow_dispatch:
     inputs:
       job:
@@ -16,6 +15,7 @@ on:
           - geeksforgeeks
           - hackerrank
           - leetcode
+
 env:
   GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
   GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
@@ -28,167 +28,48 @@ env:
   CODEFORCES_SECRET: ${{ secrets.CODEFORCES_SECRET }}
 
 jobs:
-  codechef:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codechef' || github.event == 'schedule' }}
+  verify-batch-1:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        job:
+          - codechef
+          - codeforces
+          - geeksforgeeks
+          - hackerrank
+          - leetcode
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.1.1
         with:
           ref: ${{ github.ref }}
-      
+
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-      
+
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Verify Users Codechef
+      - name: Verify and Upload
         run: |
-          python main.py --verify codechef
-
-      - name: Archive Codechef Report
+          if [[ "${{ github.event.inputs.job }}" == "all" || "${{ matrix.job }}" == "${{ github.event.inputs.job }}" ]]; then
+            python main.py --batch 1 --verify ${{ matrix.job }}
+          fi
+      
+      - name: Archive Reports
         uses: actions/upload-artifact@v4
         with:
-          name: codechef-report
-          path: reports/codechef_handles.txt
-          compression-level: 9
-          retention-days: 5
-
-  codeforces:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'codeforces' || github.event == 'schedule' }}
+          name: ${{ matrix.job }}-report-1
+          path: reports/${{ matrix.job }}_handles.txt
+  
+  upload-batch-1:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.1
-        with:
-          ref: ${{ github.ref }}
-      
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-      
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Verify Users Codeforces
-        run: |
-          python main.py --verify codeforces
-
-      - name: Archive Codeforces Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: codeforces-report
-          path: reports/codeforces_handles.txt
-          compression-level: 9
-          retention-days: 5
-
-  geeksforgeeks:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'geeksforgeeks' || github.event == 'schedule' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.1
-        with:
-          ref: ${{ github.ref }}
-      
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-      
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Verify Users GeeksforGeeks
-        run: |
-          python main.py --verify geeksforgeeks
-
-      - name: Archive GeeksforGeeks Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: geeksforgeeks-report
-          path: reports/geeksforgeeks_handles.txt
-          compression-level: 9
-          retention-days: 5
-
-  hackerrank:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'hackerrank' || github.event == 'schedule' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.1
-        with:
-          ref: ${{ github.ref }}
-      
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-      
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Verify Users HackerRank
-        run: |
-          python main.py --verify hackerrank
-
-      - name: Archive HackerRank Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: hackerrank-report
-          path: reports/hackerrank_handles.txt
-          compression-level: 9
-          retention-days: 5
-
-  leetcode:
-    if: ${{ github.event.inputs.job == 'all' || github.event.inputs.job == 'leetcode' || github.event == 'schedule' }}
-    runs-on: windows-latest
-    steps:
-      - uses: browser-actions/setup-chrome@v1
-      - run: chrome --version
-
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.1
-        with:
-          ref: ${{ github.ref }}
-      
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-      
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Verify Users LeetCode
-        run: |
-          python main.py --verify leetcode
-
-      - name: Archive LeetCode Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: leetcode-report
-          path: reports/leetcode_handles.txt
-          compression-level: 9
-          retention-days: 5
-
-  upload-to-db:
-    needs: [codechef, codeforces, geeksforgeeks, hackerrank, leetcode]
-    runs-on: ubuntu-latest
+    needs: verify-batch-1
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.1.1
@@ -203,40 +84,32 @@ jobs:
       - name: Download Reports for Codechef
         uses: actions/download-artifact@v4
         with:
-          name: codechef-report
+          name: codechef-report-1
 
       - name: Download Reports for Codeforces
         uses: actions/download-artifact@v4
         with:
-          name: codeforces-report
+          name: codeforces-report-1
 
       - name: Download Reports for GeeksforGeeks
         uses: actions/download-artifact@v4
         with:
-          name: geeksforgeeks-report
+          name: geeksforgeeks-report-1
 
       - name: Download Reports for HackerRank
         uses: actions/download-artifact@v4
         with:
-          name: hackerrank-report
+          name: hackerrank-report-1
 
       - name: Download Reports for LeetCode
         uses: actions/download-artifact@v4
         with:
-          name: leetcode-report
-
-      - name: Print current directory structure
-        run: |
-          tree .
+          name: leetcode-report-1
 
       - name: Move all reports to one directory
         run: |
           mkdir reports
           mv codechef*.txt codeforces*.txt geeksforgeeks*.txt hackerrank*.txt leetcode*.txt reports/
-
-      - name: Print current directory structure after moving
-        run: |
-          tree .
 
       - name: Install Dependencies
         run: |
@@ -245,4 +118,190 @@ jobs:
 
       - name: Upload Reports to Database
         run: |
-          python main.py --upload
+          python main.py --batch 1 --upload
+
+  verify-batch-2:
+    needs: verify-batch-1
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        job:
+          - codechef
+          - codeforces
+          - geeksforgeeks
+          - hackerrank
+          - leetcode
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Verify and Upload
+        run: |
+          if [[ "${{ github.event.inputs.job }}" == "all" || "${{ matrix.job }}" == "${{ github.event.inputs.job }}" ]]; then
+            python main.py --batch 2 --verify ${{ matrix.job }}
+          fi
+      
+      - name: Archive Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.job }}-report-2
+          path: reports/${{ matrix.job }}_handles.txt
+
+  upload-batch-2:
+    runs-on: ubuntu-latest
+    needs: verify-batch-2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Download Reports for Codechef
+        uses: actions/download-artifact@v4
+        with:
+          name: codechef-report-2
+
+      - name: Download Reports for Codeforces
+        uses: actions/download-artifact@v4
+        with:
+          name: codeforces-report-2
+
+      - name: Download Reports for GeeksforGeeks
+        uses: actions/download-artifact@v4
+        with:
+          name: geeksforgeeks-report-2
+
+      - name: Download Reports for HackerRank
+        uses: actions/download-artifact@v4
+        with:
+          name: hackerrank-report-2
+
+      - name: Download Reports for LeetCode
+        uses: actions/download-artifact@v4
+        with:
+          name: leetcode-report-2
+
+      - name: Move all reports to one directory
+        run: |
+          mkdir reports
+          mv codechef*.txt codeforces*.txt geeksforgeeks*.txt hackerrank*.txt leetcode*.txt reports/
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Upload Reports to Database
+        run: |
+          python main.py --batch 2 --upload
+
+  verify-batch-3:
+    needs: verify-batch-2
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        job:
+          - codechef
+          - codeforces
+          - geeksforgeeks
+          - hackerrank
+          - leetcode
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Verify and Upload
+        run: |
+          if [[ "${{ github.event.inputs.job }}" == "all" || "${{ matrix.job }}" == "${{ github.event.inputs.job }}" ]]; then
+            python main.py --batch 3 --verify ${{ matrix.job }}
+          fi
+      
+      - name: Archive Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.job }}-report-3
+          path: reports/${{ matrix.job }}_handles.txt
+
+  upload-batch-3:
+    runs-on: ubuntu-latest
+    needs: verify-batch-3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Download Reports for Codechef
+        uses: actions/download-artifact@v4
+        with:
+          name: codechef-report-3
+
+      - name: Download Reports for Codeforces
+        uses: actions/download-artifact@v4
+        with:
+          name: codeforces-report-3
+
+      - name: Download Reports for GeeksforGeeks
+        uses: actions/download-artifact@v4
+        with:
+          name: geeksforgeeks-report-3
+
+      - name: Download Reports for HackerRank
+        uses: actions/download-artifact@v4
+        with:
+          name: hackerrank-report-3
+
+      - name: Download Reports for LeetCode
+        uses: actions/download-artifact@v4
+        with:
+          name: leetcode-report-3
+
+      - name: Move all reports to one directory
+        run: |
+          mkdir reports
+          mv codechef*.txt codeforces*.txt geeksforgeeks*.txt hackerrank*.txt leetcode*.txt reports/
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Upload Reports to Database
+        run: |
+          python main.py --batch 3 --upload

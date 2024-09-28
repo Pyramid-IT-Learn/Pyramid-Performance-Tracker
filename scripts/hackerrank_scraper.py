@@ -3,13 +3,13 @@
 import urllib.parse
 import json
 import requests
-from cmrit_leaderboard.config import HACKERRANK_URL, HACKERRANK_CONTEST_URLS, HACKERRANK_API_URL
+from cmrit_leaderboard.config import Config, HACKERRANK_URL, HACKERRANK_CONTEST_URLS, HACKERRANK_API_URL
 
 def scrape_hackerrank(users):
     # Create hackerrankRating column
     users['hackerrankRating'] = 0
     # Load the contest name from urls and store in a list
-    SEARCH_TOKENS = [url.split('/')[-1] for url in HACKERRANK_CONTEST_URLS]
+    SEARCH_TOKENS = [url.split('/')[-1] for url in HACKERRANK_CONTEST_URLS[Config.USERS_COLLECTION]]
 
     for token in SEARCH_TOKENS:
         for i in range(1, 10000, 100):

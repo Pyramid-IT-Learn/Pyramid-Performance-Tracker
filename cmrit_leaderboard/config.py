@@ -10,12 +10,12 @@ GFG_PASSWORD = os.getenv("GFG_PASSWORD")
 CODECHEF_CLIENT_ID = os.getenv("CODECHEF_CLIENT_ID")
 CODECHEF_CLIENT_SECRET = os.getenv("CODECHEF_CLIENT_SECRET")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
-MONGODB_URI = f'mongodb+srv://root:oR4udPQSmi0z7sYt@cmrit-leaderboards.0gvol.mongodb.net/'
+MONGODB_URI = f'mongodb://myUserAdmin:{DB_PASSWORD}@103.172.179.23:27017/'
 DESCRIPTION = 'Pyramid Leaderboard Scraper'
 
 # Debugging
 DEBUG = True
-LIMIT_TEST = True
+LIMIT_TEST = False
 
 class Config:
     DB_NAME = None
@@ -26,11 +26,17 @@ class Config:
 DB_MAPPING = {
     "1": {
         "DB_NAME": "CMRIT",
+        "USERS_COLLECTION": "CMRIT-2025-LEADERBOARD",
+        "USERNAME_SHEET_URL": "https://docs.google.com/spreadsheets/d/17ypZiX6LzgmADqSgDmQ3vytIrf1DkEHafIltWaXRlog/pub?output=csv&gid=0&single=true",
+        "CSV_FILE_PATH" : 'data/CMRIT2025Leaderbaord.csv'
+    },
+    "2": {
+        "DB_NAME": "CMRIT",
         "USERS_COLLECTION": "CMRIT-2026-LEADERBOARD",
         "USERNAME_SHEET_URL": "https://docs.google.com/spreadsheets/d/1UEPRw2UcWdw4ZpmO4qZ6nOhpCygz_MWqtgvO1ugWf_E/pub?output=csv&gid=0&single=true",
         "CSV_FILE_PATH" : 'data/CMRIT2026Leaderbaord.csv'
     },
-    "2": {
+    "3": {
         "DB_NAME": "CMRIT",
         "USERS_COLLECTION": "CMRIT-2027-LEADERBOARD",
         "USERNAME_SHEET_URL": "https://docs.google.com/spreadsheets/u/2/d/e/2PACX-1vRsneoGOzu7L_Qh5M5fuZNf97fc2kVIum0w_oslizePKgRhR9pJi4EWNv5tPV7TGuvl-F_Q9rgRFBkQ/pub?output=csv&gid=0&single=true",
@@ -45,6 +51,22 @@ DB_MAPPING = {
 # Do not leave trailing slashes in the URLs (e.g., "https://www.hackerrank.com/cmrit26-1-basics" ✅, 
 # "https://www.hackerrank.com/cmrit26-2-lpb/" ❌).
 HACKERRANK_CONTEST_URLS = {
+    "CMRIT-2025-LEADERBOARD": [
+        "https://www.hackerrank.com/cmrit25-1-basics",
+        "https://www.hackerrank.com/cmrit25-4-rbd",
+        "https://www.hackerrank.com/cmrit25-3-iterables",
+        "https://www.hackerrank.com/cmrit25-2-lpb",
+        "https://www.hackerrank.com/cmrit25-5-ds",
+        "https://www.hackerrank.com/1-basics-2025",
+        "https://www.hackerrank.com/2-loops-2025",
+        "https://www.hackerrank.com/3-bitpat-2025",
+        "https://www.hackerrank.com/4-iterables-2025",
+        "https://www.hackerrank.com/5-recursion-2025",
+        "https://www.hackerrank.com/strivers-sde-sheet",
+        "https://www.hackerrank.com/ds-2025",
+        "https://www.hackerrank.com/codevita-2025",
+        "https://www.hackerrank.com/mentor-graphics-2025"
+    ],
     "CMRIT-2026-LEADERBOARD": [
         "https://www.hackerrank.com/cmrit26-1-basics",
         "https://www.hackerrank.com/cmrit26-2-lpb",
