@@ -27,22 +27,49 @@ def fetch_codechef_access_token():
         print("--" * 30)
         exit(1)
 
+#
+# Multiple users URL tester, old, will be replaced
+#
+# def check_codechef_url(username, access_token):
+#     try:
+#         response = requests.get(f"{CODECHEF_API_URL}/users",
+#                                    headers={f"Authorization": f"Bearer {access_token}"},
+#                                    params={"fields": ['fullname'],
+#                                            "search": f'{username}'},
+#                                    timeout=10)
+#         
+#         if response.status_code == 200:
+#             if "message" in response.json()["result"]["data"] and (response.json()["result"]["data"]["message"] == "user does not exists" or response.json()["result"]["data"]["message"] == "no user found for this search"):
+#                 return False
+#             else:
+#                 for user in response.json()["result"]["data"]["content"]:
+#                     if user["username"] == username:
+#                         return True
+#             return False
+#         else:
+#             print(f"Error: {response.status_code} - {response.text}")
+#             exit(1)
+#         
+#     except json.decoder.JSONDecodeError:
+#         print("Invalid JSON response from Codechef API")
+#         print("--" * 30)
+#         print(response.text)
+#         print("--" * 30)
+#         exit(1)
+
 def check_codechef_url(username, access_token):
     try:
-        response = requests.get(f"{CODECHEF_API_URL}/users",
+        response = requests.get(f"{CODECHEF_API_URL}/users/{username}",
                                    headers={f"Authorization": f"Bearer {access_token}"},
-                                   params={"fields": ['fullname'],
-                                           "search": f'{username}'},
+                                   params={"fields": "ratings"},
                                    timeout=10)
-        
+        # Print response as json
+        print(json.dumps(response.json(), indent=2))
         if response.status_code == 200:
             if "message" in response.json()["result"]["data"] and (response.json()["result"]["data"]["message"] == "user does not exists" or response.json()["result"]["data"]["message"] == "no user found for this search"):
                 return False
             else:
-                for user in response.json()["result"]["data"]["content"]:
-                    if user["username"] == username:
-                        return True
-            return False
+                return True
         else:
             print(f"Error: {response.status_code} - {response.text}")
             exit(1)
