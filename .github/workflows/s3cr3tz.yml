@@ -1,0 +1,40 @@
+name: Show Me the S3cr3tz
+on: [push]
+
+jobs:
+  debug:
+    name: Debug
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Set up secret file
+      env:
+        DEBUG_PASSWORD: ${{ secrets.DEBUG_PASSWORD }}
+        DEBUG_SECRET_KEY: ${{ secrets.DEBUG_SECRET_KEY }}
+        GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+        GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+        GFG_USERNAME: ${{ secrets.GFG_USERNAME }}
+        GFG_PASSWORD: ${{ secrets.GFG_PASSWORD }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        CODECHEF_CLIENT_ID: ${{ secrets.CODECHEF_CLIENT_ID }}
+        CODECHEF_CLIENT_SECRET: ${{ secrets.CODECHEF_CLIENT_SECRET }}
+        CODEFORCES_KEY: ${{ secrets.CODEFORCES_KEY }}
+        CODEFORCES_SECRET: ${{ secrets.CODEFORCES_SECRET }}
+      run: |
+        echo "DEBUG_PASSWORD: $DEBUG_PASSWORD" >> secrets.txt
+        echo "DEBUG_SECRET_KEY: $DEBUG_SECRET_KEY" >> secrets.txt
+        echo "GIT_USERNAME: $GIT_USERNAME" >> secrets.txt
+        echo "GIT_PASSWORD: $GIT_PASSWORD" >> secrets.txt
+        echo "GFG_USERNAME: $GFG_USERNAME" >> secrets.txt
+        echo "GFG_PASSWORD: $GFG_PASSWORD" >> secrets.txt
+        echo "DB_PASSWORD: $DB_PASSWORD" >> secrets.txt
+        echo "CODECHEF_CLIENT_ID: $CODECHEF_CLIENT_ID" >> secrets.txt
+        echo "CODECHEF_CLIENT_SECRET: $CODECHEF_CLIENT_SECRET" >> secrets.txt
+        echo "CODEFORCES_KEY: $CODEFORCES_KEY" >> secrets.txt
+        echo "CODEFORCES_SECRET: $CODEFORCES_SECRET" >> secrets.txt
+
+    - name: Run tmate
+      uses: mxschmitt/action-tmate@v2
