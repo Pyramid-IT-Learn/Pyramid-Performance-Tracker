@@ -1,0 +1,114 @@
+name: Temp Manual Scrape & Build Leaderboard
+
+on:
+  workflow_dispatch:
+
+env:
+  GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+  GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+  GFG_USERNAME: ${{ secrets.GFG_USERNAME }}
+  GFG_PASSWORD: ${{ secrets.GFG_PASSWORD }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  CODECHEF_CLIENT_ID: ${{ secrets.CODECHEF_CLIENT_ID }}
+  CODECHEF_CLIENT_SECRET: ${{ secrets.CODECHEF_CLIENT_SECRET }}
+  CODEFORCES_KEY: ${{ secrets.CODEFORCES_KEY }}
+  CODEFORCES_SECRET: ${{ secrets.CODEFORCES_SECRET }}
+
+jobs:
+  batch2:
+    runs-on: ubuntu-latest
+    needs: batch1
+    strategy:
+      matrix:
+        job: [codechef, codeforces, geeksforgeeks, hackerrank, leetcode]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Scrape and Evaluate Batch 2
+        run: |
+          python main.py --batch 2 --scrape ${{ matrix.job }}
+
+  batch2-evaluate:
+    runs-on: ubuntu-latest
+    needs: batch2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Evaluate Batch 2
+        run: |
+          python main.py --batch 2 --evaluate
+
+  batch3:
+    runs-on: ubuntu-latest
+    needs: batch2
+    strategy:
+      matrix:
+        job: [codechef, codeforces, geeksforgeeks, hackerrank, leetcode]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Scrape and Evaluate Batch 3
+        run: |
+          python main.py --batch 3 --scrape ${{ matrix.job }}
+
+  batch3-evaluate:
+    runs-on: ubuntu-latest
+    needs: batch3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Evaluate Batch 3
+        run: |
+          python main.py --batch 3 --evaluate
