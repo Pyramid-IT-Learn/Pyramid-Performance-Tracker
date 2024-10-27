@@ -17,7 +17,6 @@ env:
 jobs:
   batch2:
     runs-on: ubuntu-latest
-    needs: batch1
     strategy:
       matrix:
         job: [codechef, codeforces, geeksforgeeks, hackerrank, leetcode]
