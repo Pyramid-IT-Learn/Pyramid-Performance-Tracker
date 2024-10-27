@@ -26,11 +26,12 @@ def fetch_codechef_score(username, access_token, depth=0):
                                    timeout=10)
         
         if response.status_code == 200:
+            time.sleep(2)
             return response.json()["result"]["data"]["content"]["ratings"]["allContest"]
         else:
             print(f"Error: {response.status_code} - {response.text}")
             print("Trying again... Attempt: ", depth)
-            if "Unauthorized" in response.text and depth < 100:
+            if ("Unauthorized" in response.text or "cloudflare" in response.text) and depth < 100:
                 return fetch_codechef_score(username, access_token, depth + 1)
             else:
                 print("Too many recursive calls, exiting")
