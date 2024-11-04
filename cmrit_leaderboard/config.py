@@ -75,7 +75,8 @@ HACKERRANK_CONTEST_URLS = {
         "https://www.hackerrank.com/cmrit-june-2024",
         "https://www.hackerrank.com/cmrit-august-2024",
         "https://www.hackerrank.com/cmrit-september-2024",
-        "https://www.hackerrank.com/cmrit-october-2024"
+        "https://www.hackerrank.com/cmrit-october-2024",
+        "https://www.hackerrank.com/cmrit-november-2024"
     ],
     "CMRIT-2027-LEADERBOARD": [
         "https://www.hackerrank.com/cmrit-monthly-goal-november-2027"
